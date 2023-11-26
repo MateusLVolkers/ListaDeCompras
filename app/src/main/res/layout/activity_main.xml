@@ -6,13 +6,42 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textProduto"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="@dimen/dimen_12dp"
+        android:padding="@dimen/dimen_8dp"
+        android:textSize="@dimen/text_14sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Produto"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textDescricao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textProduto"
+        app:layout_constraintStart_toStartOf="@id/textProduto"
+        app:layout_constraintEnd_toEndOf="@id/textProduto"
+        tools:text="Descrição"
+        android:layout_marginLeft="@dimen/dimen_12dp"
+        android:layout_marginRight="@dimen/dimen_12dp"
+        android:padding="@dimen/dimen_8dp"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textPreco"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textDescricao"
+        app:layout_constraintStart_toStartOf="@id/textDescricao"
+        app:layout_constraintEnd_toEndOf="@id/textDescricao"
+        tools:text="Preço"
+        android:layout_marginLeft="@dimen/dimen_12dp"
+        android:layout_marginRight="@dimen/dimen_12dp"
+        android:padding="@dimen/dimen_8dp"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
