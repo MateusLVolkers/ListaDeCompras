@@ -2,4 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="card_paleta">#f5ebe0</color>
+    <color name="cor_barra">#d5bdaf</color>
+    <color name="cor_fab">#edede9</color>
+    <color name="cor_background">#e3d5ca</color>
 </resources>

@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.mateuslvolkers.listadecompras"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.mateuslvolkers.listadecompras"
