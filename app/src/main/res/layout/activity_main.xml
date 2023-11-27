@@ -6,42 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/textProduto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dimen_12dp"
-        android:padding="@dimen/dimen_8dp"
-        android:textSize="@dimen/text_14sp"
-        android:textStyle="bold"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/dimen_16dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Produto"/>
+        tools:listitem="@layout/lista_produtos" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/textDescricao"
-        android:layout_width="match_parent"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_adicionar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/textProduto"
-        app:layout_constraintStart_toStartOf="@id/textProduto"
-        app:layout_constraintEnd_toEndOf="@id/textProduto"
-        tools:text="Descrição"
-        android:layout_marginLeft="@dimen/dimen_12dp"
-        android:layout_marginRight="@dimen/dimen_12dp"
-        android:padding="@dimen/dimen_8dp"/>
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/textPreco"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/textDescricao"
-        app:layout_constraintStart_toStartOf="@id/textDescricao"
-        app:layout_constraintEnd_toEndOf="@id/textDescricao"
-        tools:text="Preço"
-        android:layout_marginLeft="@dimen/dimen_12dp"
-        android:layout_marginRight="@dimen/dimen_12dp"
-        android:padding="@dimen/dimen_8dp"/>
-
+        android:layout_margin="@dimen/dimen_16dp"
+        android:src="@drawable/baseline_add_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
