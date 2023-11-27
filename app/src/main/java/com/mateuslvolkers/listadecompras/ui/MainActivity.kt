@@ -1,8 +1,10 @@
 package com.mateuslvolkers.listadecompras.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.model.Produto
 import com.mateuslvolkers.listadecompras.ui.recyclerview.adapter.ListaProdutosAdapter
@@ -29,6 +31,10 @@ class MainActivity : AppCompatActivity() {
             ),
         ))
 
-
+        val fab = findViewById<FloatingActionButton>(R.id.fab_adicionar)
+        fab.setOnClickListener {
+            val intent = Intent(this, FormularioCadastro::class.java)
+            startActivity(intent)
+        }
     }
 }

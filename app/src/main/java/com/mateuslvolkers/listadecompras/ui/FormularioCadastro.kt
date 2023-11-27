@@ -25,23 +25,23 @@ class FormularioCadastro : AppCompatActivity() {
             val descricao = edtDescricao.text.toString()
             val precoEmTexto = edtPreco.text.toString()
 
-            val preco = if(precoEmTexto.isNullOrBlank()) {
+            val preco = if(precoEmTexto.isBlank()) {
                 BigDecimal.ZERO
             } else {
                 BigDecimal(precoEmTexto)
             }
 
-            Log.i("formulario", "Nome: ${nome}")
-            Log.i("formulario", "Descricao: ${descricao}")
-            Log.i("formulario", "Preco: ${preco}")
-            Log.i("formulario", preco.javaClass.name)
+//            Log.i("formulario", "Nome: ${nome}")
+//            Log.i("formulario", "Descricao: ${descricao}")
+//            Log.i("formulario", "Preco: ${preco}")
+//            Log.i("formulario", preco.javaClass.name)
 
             val produtoCriado = Produto(
                 nome = nome,
                 descricao = descricao,
                 valor = preco,
             )
-
+//            Log.i("NovoProduto", "Produto criado: ${produtoCriado}")
         }
     }
 
