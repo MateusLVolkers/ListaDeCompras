@@ -8,17 +8,21 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.mateuslvolkers.listadecompras.R
+import com.mateuslvolkers.listadecompras.databinding.ListaProdutosBinding
 import com.mateuslvolkers.listadecompras.model.Produto
 
 
 class ListaProdutosAdapter(
-    private val context: Context, private val produtos: List<Produto>
+    private val context: Context,
+    produtos: List<Produto>
 ) : RecyclerView.Adapter<ListaProdutosAdapter.ViewHolder>() {
 
+    private val produtos = produtos.toMutableList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(context)
-        val view = inflater.inflate(R.layout.lista_produtos, parent, false)
-        return ViewHolder(view)
+        val binding = ListaProdutosBinding.inflate(inflater, parent, false)
+//        val view = inflater.inflate(R.layout.lista_produtos, parent, false)
+        return ViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -30,11 +34,17 @@ class ListaProdutosAdapter(
         holder.vincularProduto(produto)
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    fun atualizar(produtos: List<Produto>) {
+        this.produtos.clear()
+        this.produtos.addAll(produtos)
+        notifyDataSetChanged()
+    }
+
+    class ViewHolder(private val binding: ListaProdutosBinding) : RecyclerView.ViewHolder(binding.root) {
         fun vincularProduto(produto: Produto) {
-            val nome = itemView.findViewById<TextView>(R.id.textProduto)
-            val descricao = itemView.findViewById<TextView>(R.id.textDescricao)
-            val preco = itemView.findViewById<TextView>(R.id.textPreco)
+            val nome = binding.textProduto
+            val descricao = binding.textDescricao
+            val preco = binding.textPreco
 
             nome.text = produto.nome
             descricao.text = produto.descricao
