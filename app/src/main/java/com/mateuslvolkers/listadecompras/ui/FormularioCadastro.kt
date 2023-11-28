@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import com.mateuslvolkers.listadecompras.R
+import com.mateuslvolkers.listadecompras.dao.ProdutosDao
 import com.mateuslvolkers.listadecompras.model.Produto
 import java.math.BigDecimal
 
@@ -25,12 +26,11 @@ class FormularioCadastro : AppCompatActivity() {
             val descricao = edtDescricao.text.toString()
             val precoEmTexto = edtPreco.text.toString()
 
-            val preco = if(precoEmTexto.isBlank()) {
+            val preco = if (precoEmTexto.isBlank()) {
                 BigDecimal.ZERO
             } else {
                 BigDecimal(precoEmTexto)
             }
-
 //            Log.i("formulario", "Nome: ${nome}")
 //            Log.i("formulario", "Descricao: ${descricao}")
 //            Log.i("formulario", "Preco: ${preco}")
@@ -41,7 +41,12 @@ class FormularioCadastro : AppCompatActivity() {
                 descricao = descricao,
                 valor = preco,
             )
-//            Log.i("NovoProduto", "Produto criado: ${produtoCriado}")
+//            Log.i("formulario", "Produto criado: ${produtoCriado}")
+            val dao = ProdutosDao()
+            dao.adiciona(produtoCriado)
+//            Log.i("formulario", "Busca no dao: ${dao.buscarTodos()}")
+            finish()
+
         }
     }
 
