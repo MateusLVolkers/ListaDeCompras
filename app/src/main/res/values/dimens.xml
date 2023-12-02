@@ -2,10 +2,13 @@
 <resources>
     <dimen name="dimen_16dp">16dp</dimen>
     <dimen name="dimen_12dp">12dp</dimen>
-    <dimen name="dimen_8dp">4dp</dimen>
+    <dimen name="dimen_8dp">8dp</dimen>
     <dimen name="dimen_6dp">6dp</dimen>
-    <dimen name="text_18sp">18sp</dimen>
+    <dimen name="text_16sp">16sp</dimen>
+    <dimen name="text_20sp">20sp</dimen>
     <dimen name="text_22sp">22sp</dimen>
+    <dimen name="text_12sp">12sp</dimen>
     <dimen name="img_size_100dp">100dp</dimen>
+    <dimen name="altura_200dp">200dp</dimen>
 
 </resources>

@@ -1,6 +1,7 @@
 package com.mateuslvolkers.listadecompras.dao
 
 import com.mateuslvolkers.listadecompras.model.Produto
+import java.math.BigDecimal
 
 class ProdutosDao {
 

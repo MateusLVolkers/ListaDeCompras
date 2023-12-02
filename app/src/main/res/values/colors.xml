@@ -6,4 +6,7 @@
     <color name="cor_barra">#d5bdaf</color>
     <color name="cor_fab">#edede9</color>
     <color name="cor_background">#e3d5ca</color>
+    <color name="cor_container">#18314f</color>
+    <color name="cor_hint">#384e77</color>
+    <color name="text_color">#6c757d</color>
 </resources>

@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.databinding.ListaProdutosBinding
 import com.mateuslvolkers.listadecompras.model.Produto
+import java.math.BigDecimal
+import java.text.NumberFormat
+import java.util.Locale
 
 
 class ListaProdutosAdapter(
@@ -48,7 +51,13 @@ class ListaProdutosAdapter(
 
             nome.text = produto.nome
             descricao.text = produto.descricao
-            preco.text = produto.valor.toPlainString()
+            preco.text = conversorDeMoeda(produto.valor)
+        }
+
+        fun conversorDeMoeda(valor: BigDecimal) : String  {
+            val formatador = NumberFormat.getCurrencyInstance(Locale("pt", "br"))
+            val numeroFormatado: String = formatador.format(valor)
+            return numeroFormatado
         }
 
     }

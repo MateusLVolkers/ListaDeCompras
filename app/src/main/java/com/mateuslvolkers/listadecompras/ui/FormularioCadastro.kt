@@ -1,16 +1,19 @@
 package com.mateuslvolkers.listadecompras.ui
 
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.dao.ProdutosDao
 import com.mateuslvolkers.listadecompras.databinding.ActivityFormularioCadastroBinding
 import com.mateuslvolkers.listadecompras.databinding.ActivityMainBinding
 import com.mateuslvolkers.listadecompras.model.Produto
 import java.math.BigDecimal
+import kotlin.math.log
 
 class FormularioCadastro : AppCompatActivity() {
 
@@ -18,13 +21,26 @@ class FormularioCadastro : AppCompatActivity() {
         ActivityFormularioCadastroBinding.inflate(layoutInflater)
     }
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         configuraBotaoSalvar()
+        binding.ivFormulario.setOnClickListener {
+//            Log.i("image","clicado")
+            AlertDialog.Builder(this)
+                .setView(R.layout.dialog_formulario_imagem)
+                .show()
+        }
+
+
+
+
     }
 
-    fun configuraBotaoSalvar(){
+
+    fun configuraBotaoSalvar() {
         val btnSalvar = binding.btnSalvar
         btnSalvar.setOnClickListener {
             val produtoNovo = criaProduto()
@@ -53,7 +69,7 @@ class FormularioCadastro : AppCompatActivity() {
 //            Log.i("formulario", "Preco: ${preco}")
 //            Log.i("formulario", preco.javaClass.name)
 
-       return Produto(
+        return Produto(
             nome = nome,
             descricao = descricao,
             valor = preco,
