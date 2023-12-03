@@ -1,80 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_produtos"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen_12dp"
+    android:backgroundTint="@color/card_paleta"
+    android:clickable="true"
+    android:elevation="@dimen/dimen_12dp"
+    android:padding="@dimen/dimen_12dp"
+    app:cardCornerRadius="@dimen/dimen_8dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_produtos"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dimen_12dp"
-        android:backgroundTint="@color/card_paleta"
-        android:clickable="true"
-        android:elevation="@dimen/dimen_8dp"
-        android:focusable="true"
-        android:padding="@dimen/dimen_12dp"
-        app:cardCornerRadius="@dimen/dimen_8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textProduto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_6dp"
+            android:layout_marginTop="@dimen/dimen_6dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="@dimen/text_20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/textDescricao"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imgProduto"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@tools:sample/lorem/random"
+            android:maxLines="1"
+            android:ellipsize="end"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/textProduto"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_6dp"
-                android:layout_marginLeft="@dimen/dimen_8dp"
-                android:padding="@dimen/dimen_8dp"
-                android:textSize="@dimen/text_18sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/imgProduto"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Produto" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textDescricao"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_12sp"
+            android:fontFamily="@font/montserrat"
+            app:layout_constraintEnd_toEndOf="@id/textProduto"
+            app:layout_constraintStart_toStartOf="@id/textProduto"
+            app:layout_constraintTop_toBottomOf="@id/textProduto"
+            app:layout_constraintBottom_toTopOf="@id/textPreco"
+            tools:text="@tools:sample/lorem/random"
+            android:maxLines="1"
+            android:ellipsize="end"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/textDescricao"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/dimen_8dp"
-                app:layout_constraintEnd_toEndOf="@id/textProduto"
-                app:layout_constraintStart_toStartOf="@id/textProduto"
-                app:layout_constraintTop_toBottomOf="@id/textProduto"
-                tools:text="Descrição" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textPreco"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat"
+            android:textSize="@dimen/text_16sp"
+            app:layout_constraintEnd_toEndOf="@id/textDescricao"
+            app:layout_constraintStart_toStartOf="@id/textDescricao"
+            app:layout_constraintTop_toBottomOf="@id/textDescricao"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="@dimen/dimen_6dp"
+            tools:text="Preço"
+            android:textColor="@android:color/holo_green_dark"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/textPreco"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/dimen_8dp"
-                app:layout_constraintEnd_toEndOf="@id/textDescricao"
-                app:layout_constraintStart_toStartOf="@id/textDescricao"
-                app:layout_constraintTop_toBottomOf="@id/textDescricao"
-                tools:text="Preço" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgProduto"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/img_size_100dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintWidth_percent="0.3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/textProduto"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:color/black"
+            tools:srcCompat="@tools:sample/avatars" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/imgProduto"
-                android:layout_width="@dimen/img_size_100dp"
-                android:layout_height="@dimen/img_size_100dp"
-                android:scaleType="centerCrop"
-                android:padding="@dimen/dimen_8dp"
-                tools:srcCompat="@tools:sample/avatars"
-                app:srcCompat="@android:color/black"
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.cardview.widget.CardView>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

@@ -7,5 +7,10 @@
         <item name="android:navigationBarColor">@color/cor_barra</item>
     </style>
 
+    <style name="text_fields" parent="">
+        <item name="colorPrimary">@color/cor_container</item>
+        <item name="colorOnSurface">@color/cor_hint</item>
+    </style>
+
     <style name="Theme.ListaDeCompras" parent="Base.Theme.ListaDeCompras" />
 </resources>

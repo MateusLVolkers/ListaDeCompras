@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/cor_background">
+    android:background="@color/cor_background"
+    android:fillViewport="true">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,8 +13,19 @@
         android:layout_height="match_parent"
         tools:context=".ui.FormularioCadastro">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/edt_produto"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_formulario"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/altura_200dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/imagem_padrao" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_produto"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimen_12dp"
@@ -22,36 +33,64 @@
             android:layout_marginRight="@dimen/dimen_12dp"
             android:hint="@string/produto"
             android:textSize="@dimen/text_22sp"
+            android:theme="@style/text_fields"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/iv_formulario">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/edt_descricao"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_produto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:textColor="@color/text_color" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_descricao"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimen_12dp"
-            android:layout_marginTop="@dimen/dimen_8dp"
+            android:layout_marginTop="@dimen/dimen_16dp"
             android:layout_marginRight="@dimen/dimen_12dp"
             android:hint="@string/descricao"
             android:textSize="@dimen/text_22sp"
+            android:theme="@style/text_fields"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edt_produto" />
+            app:layout_constraintTop_toBottomOf="@id/text_input_produto">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/edt_preco"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_descricao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:textColor="@color/text_color" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_preco"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimen_12dp"
             android:layout_marginTop="@dimen/dimen_8dp"
             android:layout_marginRight="@dimen/dimen_12dp"
             android:hint="@string/preco"
-            android:inputType="numberDecimal"
             android:textSize="@dimen/text_22sp"
+            android:theme="@style/text_fields"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edt_descricao" />
+            app:layout_constraintTop_toBottomOf="@id/text_input_descricao">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_preco"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:textColor="@color/text_color" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_salvar"
@@ -60,15 +99,14 @@
             android:layout_marginLeft="@dimen/dimen_12dp"
             android:layout_marginRight="@dimen/dimen_12dp"
             android:layout_marginBottom="@dimen/dimen_8dp"
+            android:backgroundTint="@color/cor_fab"
             android:text="@string/salvar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edt_preco"
-            app:layout_constraintVertical_bias="1"
-            android:backgroundTint="@color/cor_fab"/>
+            app:layout_constraintTop_toBottomOf="@id/text_input_preco"
+            app:layout_constraintVertical_bias="1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </ScrollView>
 

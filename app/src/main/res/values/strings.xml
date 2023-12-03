@@ -4,4 +4,6 @@
     <string name="preco">Preço</string>
     <string name="produto">Produto</string>
     <string name="descricao">Descricao</string>
+    <string name="carregar_imagem">Carregar imagem</string>
+    <string name="url_da_imagem">Url da imagem</string>
 </resources>

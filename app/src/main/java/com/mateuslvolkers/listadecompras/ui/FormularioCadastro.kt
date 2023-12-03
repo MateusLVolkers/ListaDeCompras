@@ -1,16 +1,21 @@
 package com.mateuslvolkers.listadecompras.ui
 
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import coil.load
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.dao.ProdutosDao
 import com.mateuslvolkers.listadecompras.databinding.ActivityFormularioCadastroBinding
 import com.mateuslvolkers.listadecompras.databinding.ActivityMainBinding
+import com.mateuslvolkers.listadecompras.databinding.DialogFormularioImagemBinding
 import com.mateuslvolkers.listadecompras.model.Produto
 import java.math.BigDecimal
+import kotlin.math.log
 
 class FormularioCadastro : AppCompatActivity() {
 
@@ -18,13 +23,34 @@ class FormularioCadastro : AppCompatActivity() {
         ActivityFormularioCadastroBinding.inflate(layoutInflater)
     }
 
+    private var url: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         configuraBotaoSalvar()
+        binding.ivFormulario.setOnClickListener {
+//            Log.i("image","clicado")
+            val bindingDialog = DialogFormularioImagemBinding.inflate(layoutInflater)
+            bindingDialog.btnCarregarImagem.setOnClickListener {
+                val url = bindingDialog.edtUrl.text.toString()
+                bindingDialog.imgDialog.load(url){
+                }
+            }
+            AlertDialog.Builder(this)
+                .setView(bindingDialog.root)
+                .setPositiveButton("Confirmar" ){ _, _ ->
+                    url = bindingDialog.edtUrl.text.toString()
+                    binding.ivFormulario.load(url)
+                }
+                .setNegativeButton("Cancelar"){_, _ -> }
+                .show()
+        }
+
     }
 
-    fun configuraBotaoSalvar(){
+
+    fun configuraBotaoSalvar() {
         val btnSalvar = binding.btnSalvar
         btnSalvar.setOnClickListener {
             val produtoNovo = criaProduto()
@@ -53,10 +79,11 @@ class FormularioCadastro : AppCompatActivity() {
 //            Log.i("formulario", "Preco: ${preco}")
 //            Log.i("formulario", preco.javaClass.name)
 
-       return Produto(
+        return Produto(
             nome = nome,
             descricao = descricao,
             valor = preco,
+            imagem = url,
         )
 //            Log.i("formulario", "Produto criado: ${produtoCriado}")
 //            Log.i("formulario", "Busca no dao: ${dao.buscarTodos()}")
