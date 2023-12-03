@@ -7,10 +7,12 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import coil.load
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.dao.ProdutosDao
 import com.mateuslvolkers.listadecompras.databinding.ActivityFormularioCadastroBinding
 import com.mateuslvolkers.listadecompras.databinding.ActivityMainBinding
+import com.mateuslvolkers.listadecompras.databinding.DialogFormularioImagemBinding
 import com.mateuslvolkers.listadecompras.model.Produto
 import java.math.BigDecimal
 import kotlin.math.log
@@ -21,7 +23,7 @@ class FormularioCadastro : AppCompatActivity() {
         ActivityFormularioCadastroBinding.inflate(layoutInflater)
     }
 
-
+    private var url: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,13 +31,21 @@ class FormularioCadastro : AppCompatActivity() {
         configuraBotaoSalvar()
         binding.ivFormulario.setOnClickListener {
 //            Log.i("image","clicado")
+            val bindingDialog = DialogFormularioImagemBinding.inflate(layoutInflater)
+            bindingDialog.btnCarregarImagem.setOnClickListener {
+                val url = bindingDialog.edtUrl.text.toString()
+                bindingDialog.imgDialog.load(url){
+                }
+            }
             AlertDialog.Builder(this)
-                .setView(R.layout.dialog_formulario_imagem)
+                .setView(bindingDialog.root)
+                .setPositiveButton("Confirmar" ){ _, _ ->
+                    url = bindingDialog.edtUrl.text.toString()
+                    binding.ivFormulario.load(url)
+                }
+                .setNegativeButton("Cancelar"){_, _ -> }
                 .show()
         }
-
-
-
 
     }
 
@@ -73,6 +83,7 @@ class FormularioCadastro : AppCompatActivity() {
             nome = nome,
             descricao = descricao,
             valor = preco,
+            imagem = url,
         )
 //            Log.i("formulario", "Produto criado: ${produtoCriado}")
 //            Log.i("formulario", "Busca no dao: ${dao.buscarTodos()}")

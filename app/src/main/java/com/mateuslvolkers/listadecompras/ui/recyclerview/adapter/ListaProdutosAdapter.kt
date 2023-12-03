@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import coil.load
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.databinding.ListaProdutosBinding
 import com.mateuslvolkers.listadecompras.model.Produto
@@ -48,10 +49,20 @@ class ListaProdutosAdapter(
             val nome = binding.textProduto
             val descricao = binding.textDescricao
             val preco = binding.textPreco
+            val imagem = binding.imgProduto
 
             nome.text = produto.nome
             descricao.text = produto.descricao
             preco.text = conversorDeMoeda(produto.valor)
+            if (produto.imagem.isNullOrBlank()){
+                imagem.visibility = View.GONE
+            } else {
+                imagem.load(produto.imagem)
+            }
+//            imagem.load(produto.imagem) {
+//                fallback(com.google.android.material.R.drawable.mtrl_ic_error)
+//                error(com.google.android.material.R.drawable.mtrl_ic_error)
+//            }
         }
 
         fun conversorDeMoeda(valor: BigDecimal) : String  {

@@ -26,7 +26,6 @@
             android:layout_marginLeft="@dimen/dimen_6dp"
             android:layout_marginTop="@dimen/dimen_6dp"
             android:fontFamily="@font/montserrat_bold"
-            app:layout_constraintWidth_percent="0.7"
             android:textSize="@dimen/text_20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/textDescricao"
