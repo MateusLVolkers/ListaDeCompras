@@ -30,9 +30,10 @@ class FormularioCadastro : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        title = "Cadastrar produto"
         configuraBotaoSalvar()
         binding.ivFormulario.setOnClickListener {
-            FormularioDialog(this).show {imagem ->
+            FormularioDialog(this).show(url) {imagem ->
                 url = imagem
                 binding.ivFormulario.carregarImagem(url)
             }
