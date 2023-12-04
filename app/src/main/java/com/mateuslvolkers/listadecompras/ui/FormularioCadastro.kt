@@ -13,7 +13,9 @@ import com.mateuslvolkers.listadecompras.dao.ProdutosDao
 import com.mateuslvolkers.listadecompras.databinding.ActivityFormularioCadastroBinding
 import com.mateuslvolkers.listadecompras.databinding.ActivityMainBinding
 import com.mateuslvolkers.listadecompras.databinding.DialogFormularioImagemBinding
+import com.mateuslvolkers.listadecompras.extensions.carregarImagem
 import com.mateuslvolkers.listadecompras.model.Produto
+import com.mateuslvolkers.listadecompras.ui.dialog.FormularioDialog
 import java.math.BigDecimal
 import kotlin.math.log
 
@@ -30,23 +32,11 @@ class FormularioCadastro : AppCompatActivity() {
         setContentView(binding.root)
         configuraBotaoSalvar()
         binding.ivFormulario.setOnClickListener {
-//            Log.i("image","clicado")
-            val bindingDialog = DialogFormularioImagemBinding.inflate(layoutInflater)
-            bindingDialog.btnCarregarImagem.setOnClickListener {
-                val url = bindingDialog.edtUrl.text.toString()
-                bindingDialog.imgDialog.load(url){
-                }
+            FormularioDialog(this).show {imagem ->
+                url = imagem
+                binding.ivFormulario.carregarImagem(url)
             }
-            AlertDialog.Builder(this)
-                .setView(bindingDialog.root)
-                .setPositiveButton("Confirmar" ){ _, _ ->
-                    url = bindingDialog.edtUrl.text.toString()
-                    binding.ivFormulario.load(url)
-                }
-                .setNegativeButton("Cancelar"){_, _ -> }
-                .show()
         }
-
     }
 
 
