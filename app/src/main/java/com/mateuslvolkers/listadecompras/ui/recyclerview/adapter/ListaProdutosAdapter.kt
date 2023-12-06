@@ -19,7 +19,8 @@ import java.util.Locale
 
 class ListaProdutosAdapter(
     private val context: Context,
-    produtos: List<Produto>
+    produtos: List<Produto>,
+    private val click: (produto: Produto) -> Unit
 ) : RecyclerView.Adapter<ListaProdutosAdapter.ViewHolder>() {
 
     private val produtos = produtos.toMutableList()
@@ -37,6 +38,7 @@ class ListaProdutosAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val produto = produtos[position]
         holder.vincularProduto(produto)
+
     }
 
     fun atualizar(produtos: List<Produto>) {
@@ -45,12 +47,14 @@ class ListaProdutosAdapter(
         notifyDataSetChanged()
     }
 
-    class ViewHolder(private val binding: ListaProdutosBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ListaProdutosBinding) : RecyclerView.ViewHolder(binding.root) {
+
         fun vincularProduto(produto: Produto) {
             val nome = binding.textProduto
             val descricao = binding.textDescricao
             val preco = binding.textPreco
             val imagem = binding.imgProduto
+            val card = binding.cardProdutos
 
             nome.text = produto.nome
             descricao.text = produto.descricao
@@ -59,6 +63,9 @@ class ListaProdutosAdapter(
                 imagem.visibility = View.GONE
             } else {
                 imagem.carregarImagem(produto.imagem)
+            }
+            card.setOnClickListener {
+                click(produto)
             }
 
         }
