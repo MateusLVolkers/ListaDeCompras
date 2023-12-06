@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.databinding.ListaProdutosBinding
+import com.mateuslvolkers.listadecompras.extensions.carregarImagem
 import com.mateuslvolkers.listadecompras.model.Produto
 import java.math.BigDecimal
 import java.text.NumberFormat
@@ -18,7 +19,8 @@ import java.util.Locale
 
 class ListaProdutosAdapter(
     private val context: Context,
-    produtos: List<Produto>
+    produtos: List<Produto>,
+    private val click: (produto: Produto) -> Unit
 ) : RecyclerView.Adapter<ListaProdutosAdapter.ViewHolder>() {
 
     private val produtos = produtos.toMutableList()
@@ -36,6 +38,7 @@ class ListaProdutosAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val produto = produtos[position]
         holder.vincularProduto(produto)
+
     }
 
     fun atualizar(produtos: List<Produto>) {
@@ -44,12 +47,14 @@ class ListaProdutosAdapter(
         notifyDataSetChanged()
     }
 
-    class ViewHolder(private val binding: ListaProdutosBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ListaProdutosBinding) : RecyclerView.ViewHolder(binding.root) {
+
         fun vincularProduto(produto: Produto) {
             val nome = binding.textProduto
             val descricao = binding.textDescricao
             val preco = binding.textPreco
             val imagem = binding.imgProduto
+            val card = binding.cardProdutos
 
             nome.text = produto.nome
             descricao.text = produto.descricao
@@ -57,12 +62,12 @@ class ListaProdutosAdapter(
             if (produto.imagem.isNullOrBlank()){
                 imagem.visibility = View.GONE
             } else {
-                imagem.load(produto.imagem)
+                imagem.carregarImagem(produto.imagem)
             }
-//            imagem.load(produto.imagem) {
-//                fallback(com.google.android.material.R.drawable.mtrl_ic_error)
-//                error(com.google.android.material.R.drawable.mtrl_ic_error)
-//            }
+            card.setOnClickListener {
+                click(produto)
+            }
+
         }
 
         fun conversorDeMoeda(valor: BigDecimal) : String  {

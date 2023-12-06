@@ -2,7 +2,9 @@ package com.mateuslvolkers.listadecompras.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mateuslvolkers.listadecompras.R
@@ -16,7 +18,11 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
     private val dao = ProdutosDao()
-    private val adapter = ListaProdutosAdapter(context = this, produtos = dao.buscarTodos())
+    private val adapter = ListaProdutosAdapter(context = this, produtos = dao.buscarTodos()){ produto ->
+        val intent = Intent(this, DetalhesProduto::class.java)
+        intent.putExtra("produto", produto)
+        startActivity(intent)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -40,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     fun configuraRecyclerView() {
         val recyclerview = binding.recyclerview
         recyclerview.adapter = adapter
+//        recyclerview.addItemDecoration(DividerItemDecoration(this,RecyclerView.VERTICAL))
     }
 
 }
