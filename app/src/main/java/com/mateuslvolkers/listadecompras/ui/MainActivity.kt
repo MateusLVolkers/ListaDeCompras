@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity() {
     private val adapter = ListaProdutosAdapter(context = this, produtos = dao.buscarTodos()){ produto ->
         val intent = Intent(this, DetalhesProduto::class.java)
         intent.putExtra("produto", produto)
-//        Toast.makeText(this, "Testando ${produto.nome}", Toast.LENGTH_LONG).show()
         startActivity(intent)
     }
     override fun onCreate(savedInstanceState: Bundle?) {

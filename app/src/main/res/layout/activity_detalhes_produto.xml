@@ -6,7 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fillViewport="true"
-    tools:context=".ui.DetalhesProduto">
+    tools:context=".ui.DetalhesProduto"
+    android:background="@color/cor_background"
+    style="@style/Theme.AppCompat.NoActionBar">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -31,7 +33,7 @@
             android:elevation="@dimen/dimen_12dp"
             android:paddingHorizontal="@dimen/dimen_8dp"
             android:paddingVertical="@dimen/dimen_6dp"
-            android:textColor="@color/text_color"
+            android:textColor="@android:color/holo_green_dark"
             android:textSize="@dimen/text_22sp"
             app:layout_constraintBottom_toBottomOf="@id/imagemDetalhes"
             app:layout_constraintStart_toStartOf="@id/imagemDetalhes"

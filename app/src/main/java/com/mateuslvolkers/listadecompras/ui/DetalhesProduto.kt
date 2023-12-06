@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import coil.load
 import com.mateuslvolkers.listadecompras.databinding.ActivityDetalhesProdutoBinding
+import com.mateuslvolkers.listadecompras.extensions.carregarImagem
 import com.mateuslvolkers.listadecompras.model.Produto
 import java.math.BigDecimal
 import java.text.NumberFormat
@@ -20,19 +21,16 @@ class DetalhesProduto : AppCompatActivity() {
         setContentView(binding.root)
 
         val bundle = intent.extras
-
         val produto = if (Build.VERSION.SDK_INT >= 33) {
-            bundle?.getParcelableArray("produto", Produto::class.java)
+            bundle?.getParcelable("produto", Produto::class.java)
         } else {
             bundle?.getParcelable("produto")
         }
-
         Log.i("produtoclicado", "${produto}")
 
-    }
-
-    fun verificaBundle(bundle: Bundle?) {
-        if (bundle == null) {
+        if (produto != null) {
+            configuraView(produto)
+        } else {
             finish()
         }
     }
@@ -42,7 +40,7 @@ class DetalhesProduto : AppCompatActivity() {
             titleDetalhe.text = produto.nome
             textDescricao.text = produto.descricao
             textPreco.text = conversorDeMoeda(produto.valor)
-            imagemDetalhes.load(produto.imagem)
+            imagemDetalhes.carregarImagem(produto.imagem)
         }
     }
 
@@ -51,5 +49,4 @@ class DetalhesProduto : AppCompatActivity() {
         val numeroFormatado: String = formatador.format(valor)
         return numeroFormatado
     }
-
 }
