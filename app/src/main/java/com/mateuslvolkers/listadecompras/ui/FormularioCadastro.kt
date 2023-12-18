@@ -1,23 +1,14 @@
 package com.mateuslvolkers.listadecompras.ui
 
-import android.content.DialogInterface
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
-import coil.load
-import com.mateuslvolkers.listadecompras.R
-import com.mateuslvolkers.listadecompras.dao.ProdutosDao
+import androidx.appcompat.app.AppCompatActivity
+import androidx.room.Room
+import com.mateuslvolkers.listadecompras.database.AppDatabase
 import com.mateuslvolkers.listadecompras.databinding.ActivityFormularioCadastroBinding
-import com.mateuslvolkers.listadecompras.databinding.ActivityMainBinding
-import com.mateuslvolkers.listadecompras.databinding.DialogFormularioImagemBinding
 import com.mateuslvolkers.listadecompras.extensions.carregarImagem
 import com.mateuslvolkers.listadecompras.model.Produto
 import com.mateuslvolkers.listadecompras.ui.dialog.FormularioDialog
 import java.math.BigDecimal
-import kotlin.math.log
 
 class FormularioCadastro : AppCompatActivity() {
 
@@ -33,7 +24,7 @@ class FormularioCadastro : AppCompatActivity() {
         title = "Cadastrar produto"
         configuraBotaoSalvar()
         binding.ivFormulario.setOnClickListener {
-            FormularioDialog(this).show(url) {imagem ->
+            FormularioDialog(this).show(url) { imagem ->
                 url = imagem
                 binding.ivFormulario.carregarImagem(url)
             }
@@ -43,10 +34,14 @@ class FormularioCadastro : AppCompatActivity() {
 
     fun configuraBotaoSalvar() {
         val btnSalvar = binding.btnSalvar
+
+        // .allowMainThreadQueries() não é uma boa prática
+        val db = AppDatabase.instanciaDB(this)
+        val produtoDao = db.produtoDao()
+
         btnSalvar.setOnClickListener {
             val produtoNovo = criaProduto()
-            val dao = ProdutosDao()
-            dao.adiciona(produtoNovo)
+            produtoDao.salvar(produtoNovo)
             finish()
         }
     }
