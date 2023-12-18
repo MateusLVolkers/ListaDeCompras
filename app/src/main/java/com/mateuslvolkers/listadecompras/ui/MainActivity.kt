@@ -6,9 +6,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.dao.ProdutosDao
+import com.mateuslvolkers.listadecompras.database.AppDatabase
 import com.mateuslvolkers.listadecompras.databinding.ActivityMainBinding
 import com.mateuslvolkers.listadecompras.ui.recyclerview.adapter.ListaProdutosAdapter
 
@@ -17,8 +19,8 @@ class MainActivity : AppCompatActivity() {
     private val binding by lazy{
         ActivityMainBinding.inflate(layoutInflater)
     }
-    private val dao = ProdutosDao()
-    private val adapter = ListaProdutosAdapter(context = this, produtos = dao.buscarTodos()){ produto ->
+
+    private val adapter = ListaProdutosAdapter(context = this){ produto ->
         val intent = Intent(this, DetalhesProduto::class.java)
         intent.putExtra("produto", produto)
         startActivity(intent)
@@ -32,7 +34,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        adapter.atualizar(dao.buscarTodos())
+        // .allowMainThreadQueries() não é uma boa prática
+        val produtoDaoDB = AppDatabase.instanciaDB(this).produtoDao()
+        adapter.atualizar(produtoDaoDB.buscaTodos())
     }
 
     fun configuraFab() {
@@ -48,6 +52,5 @@ class MainActivity : AppCompatActivity() {
         recyclerview.adapter = adapter
 //        recyclerview.addItemDecoration(DividerItemDecoration(this,RecyclerView.VERTICAL))
     }
-
 }
 
