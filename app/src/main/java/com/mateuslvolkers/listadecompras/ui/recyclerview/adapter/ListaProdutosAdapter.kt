@@ -2,8 +2,10 @@ package com.mateuslvolkers.listadecompras.ui.recyclerview.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -20,10 +22,13 @@ import java.util.Locale
 class ListaProdutosAdapter(
     private val context: Context,
     produtos: List<Produto> = emptyList(),
-    private val click: (produto: Produto) -> Unit
+    var click: (produto: Produto) -> Unit = {},
+    var clicarEmEditar: (produto: Produto) -> Unit = {},
+    var clicarEmRemover: (produto: Produto) -> Unit = {}
 ) : RecyclerView.Adapter<ListaProdutosAdapter.ViewHolder>() {
 
     private val produtos = produtos.toMutableList()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(context)
         val binding = ListaProdutosBinding.inflate(inflater, parent, false)
@@ -47,7 +52,26 @@ class ListaProdutosAdapter(
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(private val binding: ListaProdutosBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ListaProdutosBinding) :
+        RecyclerView.ViewHolder(binding.root), PopupMenu.OnMenuItemClickListener {
+
+        //
+        private lateinit var produto: Produto
+        init {
+            itemView.setOnClickListener {
+                if (::produto.isInitialized) {
+                    click(produto)
+                }
+            }
+
+            itemView.setOnLongClickListener {
+                PopupMenu(context, itemView).apply {
+                    menuInflater.inflate(R.menu.menu_detalhes_produto, menu)
+                    setOnMenuItemClickListener(this@ViewHolder)
+                }.show()
+                true
+            }
+        }
 
         fun vincularProduto(produto: Produto) {
             val nome = binding.textProduto
@@ -59,7 +83,7 @@ class ListaProdutosAdapter(
             nome.text = produto.nome
             descricao.text = produto.descricao
             preco.text = conversorDeMoeda(produto.valor)
-            if (produto.imagem.isNullOrBlank()){
+            if (produto.imagem.isNullOrBlank()) {
                 imagem.visibility = View.GONE
             } else {
                 imagem.carregarImagem(produto.imagem)
@@ -67,13 +91,27 @@ class ListaProdutosAdapter(
             card.setOnClickListener {
                 click(produto)
             }
-
         }
 
-        fun conversorDeMoeda(valor: BigDecimal) : String  {
+        fun conversorDeMoeda(valor: BigDecimal): String {
             val formatador = NumberFormat.getCurrencyInstance(Locale("pt", "br"))
             val numeroFormatado: String = formatador.format(valor)
             return numeroFormatado
+        }
+
+        override fun onMenuItemClick(item: MenuItem?): Boolean {
+            item?.let {
+                when (it.itemId) {
+                    R.id.menu_detalhes_remover -> {
+                        clicarEmRemover(produto)
+                    }
+
+                    R.id.menu_detalhes_edicao -> {
+                        clicarEmEditar(produto)
+                    }
+                }
+            }
+            return true
         }
 
     }

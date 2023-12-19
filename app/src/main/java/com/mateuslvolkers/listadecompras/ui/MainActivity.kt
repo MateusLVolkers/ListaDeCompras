@@ -2,14 +2,8 @@ package com.mateuslvolkers.listadecompras.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.mateuslvolkers.listadecompras.R
-import com.mateuslvolkers.listadecompras.dao.ProdutosDao
 import com.mateuslvolkers.listadecompras.database.AppDatabase
 import com.mateuslvolkers.listadecompras.databinding.ActivityMainBinding
 import com.mateuslvolkers.listadecompras.ui.recyclerview.adapter.ListaProdutosAdapter
@@ -20,11 +14,8 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
-    private val adapter = ListaProdutosAdapter(context = this){ produto ->
-        val intent = Intent(this, DetalhesProduto::class.java)
-        intent.putExtra("produto", produto)
-        startActivity(intent)
-    }
+    private val adapter = ListaProdutosAdapter(context = this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -51,6 +42,20 @@ class MainActivity : AppCompatActivity() {
         val recyclerview = binding.recyclerview
         recyclerview.adapter = adapter
 //        recyclerview.addItemDecoration(DividerItemDecoration(this,RecyclerView.VERTICAL))
+        adapter.click = {
+            val intent = Intent(this, DetalhesProduto::class.java)
+            intent.putExtra("produto", it)
+            startActivity(intent)
+        }
+
+        adapter.clicarEmRemover = {
+            Log.i("cliques", "Remover $it")
+        }
+        adapter.clicarEmEditar = {
+            Log.i("cliques", "Editar $it")
+        }
+
+
     }
 }
 

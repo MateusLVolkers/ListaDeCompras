@@ -6,4 +6,6 @@
     <string name="descricao">Descricao</string>
     <string name="carregar_imagem">Carregar imagem</string>
     <string name="url_da_imagem">Url da imagem</string>
+    <string name="editar">Editar</string>
+    <string name="remover">Remover</string>
 </resources>
