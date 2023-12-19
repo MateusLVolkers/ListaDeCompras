@@ -88,9 +88,12 @@ class ListaProdutosAdapter(
             } else {
                 imagem.carregarImagem(produto.imagem)
             }
-            card.setOnClickListener {
-                click(produto)
-            }
+//            card.setOnClickListener {
+//                click(produto)
+//                editar(produto)
+//            }
+
+
         }
 
         fun conversorDeMoeda(valor: BigDecimal): String {
@@ -99,6 +102,22 @@ class ListaProdutosAdapter(
             return numeroFormatado
         }
 
+        fun editar(produto: Produto){
+            fun onMenuItemClick(item: MenuItem?): Boolean {
+                item?.let {
+                    when (it.itemId) {
+                        R.id.menu_detalhes_remover -> {
+                            clicarEmRemover(produto)
+                        }
+
+                        R.id.menu_detalhes_edicao -> {
+                            clicarEmEditar(produto)
+                        }
+                    }
+                }
+                return true
+            }
+        }
         override fun onMenuItemClick(item: MenuItem?): Boolean {
             item?.let {
                 when (it.itemId) {
