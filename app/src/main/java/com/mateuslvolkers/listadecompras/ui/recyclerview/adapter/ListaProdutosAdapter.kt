@@ -21,11 +21,12 @@ import java.util.Locale
 
 class ListaProdutosAdapter(
     private val context: Context,
-    produtos: List<Produto> = emptyList(),
-    var click: (produto: Produto) -> Unit = {},
-    var clicarEmEditar: (produto: Produto) -> Unit = {},
-    var clicarEmRemover: (produto: Produto) -> Unit = {}
+    produtos: List<Produto> = emptyList()
 ) : RecyclerView.Adapter<ListaProdutosAdapter.ViewHolder>() {
+
+    var clicarEmEditar: (produto: Produto) -> Unit = {}
+    var clicarEmRemover: (produto: Produto) -> Unit = {}
+    var click: (produto: Produto) -> Unit = {}
 
     private val produtos = produtos.toMutableList()
 
@@ -55,15 +56,13 @@ class ListaProdutosAdapter(
     inner class ViewHolder(private val binding: ListaProdutosBinding) :
         RecyclerView.ViewHolder(binding.root), PopupMenu.OnMenuItemClickListener {
 
-        //
         private lateinit var produto: Produto
         init {
             itemView.setOnClickListener {
                 if (::produto.isInitialized) {
-                    click(produto)
+                    click.invoke(produtos[adapterPosition])
                 }
             }
-
             itemView.setOnLongClickListener {
                 PopupMenu(context, itemView).apply {
                     menuInflater.inflate(R.menu.menu_detalhes_produto, menu)
@@ -74,11 +73,12 @@ class ListaProdutosAdapter(
         }
 
         fun vincularProduto(produto: Produto) {
+            this.produto = produto
             val nome = binding.textProduto
             val descricao = binding.textDescricao
             val preco = binding.textPreco
             val imagem = binding.imgProduto
-            val card = binding.cardProdutos
+//            val card = binding.cardProdutos
 
             nome.text = produto.nome
             descricao.text = produto.descricao
@@ -90,7 +90,6 @@ class ListaProdutosAdapter(
             }
 //            card.setOnClickListener {
 //                click(produto)
-//                editar(produto)
 //            }
 
 
@@ -101,32 +100,15 @@ class ListaProdutosAdapter(
             val numeroFormatado: String = formatador.format(valor)
             return numeroFormatado
         }
-
-        fun editar(produto: Produto){
-            fun onMenuItemClick(item: MenuItem?): Boolean {
-                item?.let {
-                    when (it.itemId) {
-                        R.id.menu_detalhes_remover -> {
-                            clicarEmRemover(produto)
-                        }
-
-                        R.id.menu_detalhes_edicao -> {
-                            clicarEmEditar(produto)
-                        }
-                    }
-                }
-                return true
-            }
-        }
         override fun onMenuItemClick(item: MenuItem?): Boolean {
             item?.let {
                 when (it.itemId) {
                     R.id.menu_detalhes_remover -> {
-                        clicarEmRemover(produto)
+                        clicarEmRemover.invoke(produtos[adapterPosition])
                     }
 
                     R.id.menu_detalhes_edicao -> {
-                        clicarEmEditar(produto)
+                        clicarEmEditar.invoke(produtos[adapterPosition])
                     }
                 }
             }
