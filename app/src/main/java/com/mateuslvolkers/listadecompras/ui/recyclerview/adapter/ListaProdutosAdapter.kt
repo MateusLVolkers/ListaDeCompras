@@ -106,7 +106,6 @@ class ListaProdutosAdapter(
                     R.id.menu_detalhes_remover -> {
                         clicarEmRemover.invoke(produtos[adapterPosition])
                     }
-
                     R.id.menu_detalhes_edicao -> {
                         clicarEmEditar.invoke(produtos[adapterPosition])
                     }
