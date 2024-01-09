@@ -20,19 +20,29 @@ import java.util.Locale
 class DetalhesProduto : AppCompatActivity() {
 
     private val binding by lazy {ActivityDetalhesProdutoBinding.inflate(layoutInflater)}
-    private lateinit var produtoCarregado: Produto
+    private  var produtoCarregado: Produto? = null
+    private var produtoId : Long? = null
+    val produtoDao by lazy {
+        AppDatabase.instanciaDB(this).produtoDao()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         carregarProduto()
+    }
 
+    override fun onResume() {
+        super.onResume()
+        produtoId?.let {id ->
+            produtoCarregado = produtoDao.buscarPorId(id)
+        }
+        produtoCarregado?.let {
+            configuraView(it)
+        } ?: finish()
     }
 
     fun configuraView(produto: Produto) {
-        produtoCarregado = produto
-//        Log.i("produtoCarregado", "${produtoCarregado}")
-
         binding.apply {
             titleDetalhe.text = produto.nome
             textDescricao.text = produto.descricao
@@ -51,6 +61,8 @@ class DetalhesProduto : AppCompatActivity() {
 //        Log.i("produtoclicado", "${produto}")
 
         if (produto != null) {
+            produtoId = produto.id
+//        Log.i("produtoCarregado", "${produtoCarregado}")
             configuraView(produto)
         } else {
             finish()
@@ -70,10 +82,6 @@ class DetalhesProduto : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        if (::produtoCarregado.isInitialized){
-            val db = AppDatabase.instanciaDB(this)
-            val produtoDao = db.produtoDao()
-
             when(item.itemId){
                 R.id.menu_detalhes_edicao -> {
                     Intent(this, FormularioCadastro::class.java).apply {
@@ -82,11 +90,13 @@ class DetalhesProduto : AppCompatActivity() {
                     }
                 }
                 R.id.menu_detalhes_remover -> {
-                    produtoDao.deletarProduto(produtoCarregado)
-                    finish()
+                    produtoCarregado?.let {
+                        produtoDao.deletarProduto(it)
+                        finish()
+                    }
                 }
             }
-        }
+
         return super.onOptionsItemSelected(item)
     }
 
