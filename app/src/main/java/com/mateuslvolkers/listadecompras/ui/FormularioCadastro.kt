@@ -1,6 +1,7 @@
 package com.mateuslvolkers.listadecompras.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.mateuslvolkers.listadecompras.database.AppDatabase
@@ -15,8 +16,8 @@ class FormularioCadastro : AppCompatActivity() {
     private val binding by lazy {
         ActivityFormularioCadastroBinding.inflate(layoutInflater)
     }
-
     private var url: String? = null
+    private var idProduto = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +30,20 @@ class FormularioCadastro : AppCompatActivity() {
                 binding.ivFormulario.carregarImagem(url)
             }
         }
-    }
 
+        intent.getParcelableExtra<Produto>("produto")?.let {produtoRecebido ->
+            title = "Alterar produto"
+//            Log.i("produtoRecebido", "$it")
+            idProduto = produtoRecebido.id
+            url = produtoRecebido.imagem
+            binding.apply {
+                ivFormulario.carregarImagem(produtoRecebido.imagem)
+                edtProduto.setText(produtoRecebido.nome)
+                edtDescricao.setText(produtoRecebido.descricao)
+                edtPreco.setText(produtoRecebido.valor.toPlainString())
+            }
+        }
+    }
 
     fun configuraBotaoSalvar() {
         val btnSalvar = binding.btnSalvar
@@ -41,7 +54,11 @@ class FormularioCadastro : AppCompatActivity() {
 
         btnSalvar.setOnClickListener {
             val produtoNovo = criaProduto()
-            produtoDao.salvar(produtoNovo)
+            if (idProduto > 0) {
+                produtoDao.alterarProduto(produtoNovo)
+            } else {
+                produtoDao.salvar(produtoNovo)
+            }
             finish()
         }
     }
@@ -66,6 +83,7 @@ class FormularioCadastro : AppCompatActivity() {
 //            Log.i("formulario", preco.javaClass.name)
 
         return Produto(
+            id = idProduto,
             nome = nome,
             descricao = descricao,
             valor = preco,

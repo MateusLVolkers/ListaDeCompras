@@ -1,6 +1,7 @@
 package com.mateuslvolkers.listadecompras.ui.recyclerview.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -78,6 +79,7 @@ class ListaProdutosAdapter(
             val descricao = binding.textDescricao
             val preco = binding.textPreco
             val imagem = binding.imgProduto
+//            Log.i("imagem", "imagem: $imagem")
 //            val card = binding.cardProdutos
 
             nome.text = produto.nome
@@ -91,8 +93,6 @@ class ListaProdutosAdapter(
 //            card.setOnClickListener {
 //                click(produto)
 //            }
-
-
         }
 
         fun conversorDeMoeda(valor: BigDecimal): String {

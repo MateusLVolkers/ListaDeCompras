@@ -48,8 +48,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        adapter.clicarEmRemover = {
-            Log.i("cliques", "Remover $it")
+        val db = AppDatabase.instanciaDB(this)
+        val produtoDao = db.produtoDao()
+
+        adapter.clicarEmRemover = {produto ->
+            produtoDao.deletarProduto(produto)
+            adapter.atualizar(produtoDao.buscaTodos())
         }
         adapter.clicarEmEditar = {
             Log.i("cliques", "Editar $it")
