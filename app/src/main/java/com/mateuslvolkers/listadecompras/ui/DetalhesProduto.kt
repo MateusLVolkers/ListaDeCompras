@@ -21,7 +21,7 @@ class DetalhesProduto : AppCompatActivity() {
 
     private val binding by lazy {ActivityDetalhesProdutoBinding.inflate(layoutInflater)}
     private  var produtoCarregado: Produto? = null
-    private var produtoId : Long? = null
+    private var produtoId : Long = 0L
     val produtoDao by lazy {
         AppDatabase.instanciaDB(this).produtoDao()
     }
@@ -34,9 +34,7 @@ class DetalhesProduto : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        produtoId?.let {id ->
-            produtoCarregado = produtoDao.buscarPorId(id)
-        }
+        produtoCarregado = produtoDao.buscarPorId(produtoId)
         produtoCarregado?.let {
             configuraView(it)
         } ?: finish()
@@ -52,21 +50,23 @@ class DetalhesProduto : AppCompatActivity() {
     }
 
     fun carregarProduto() {
-        val bundle = intent.extras
-        val produto = if (Build.VERSION.SDK_INT >= 33) {
-            bundle?.getParcelable("produto", Produto::class.java)
-        } else {
-            bundle?.getParcelable("produto")
-        }
-//        Log.i("produtoclicado", "${produto}")
+        produtoId = intent.getLongExtra("produtoID", 0L)
 
-        if (produto != null) {
-            produtoId = produto.id
-//        Log.i("produtoCarregado", "${produtoCarregado}")
-            configuraView(produto)
-        } else {
-            finish()
-        }
+//        Implementação anterior - Refatorado
+//        val bundle = intent.extras
+//        val produto = if (Build.VERSION.SDK_INT >= 33) {
+//            bundle?.getParcelable("produto", Produto::class.java)
+//        } else {
+//            bundle?.getParcelable("produto")
+//        }
+//        Log.i("produtoclicado", "${produto}")
+//        if (produto != null) {
+//            produtoId = produto.id
+////        Log.i("produtoCarregado", "${produtoCarregado}")
+//            configuraView(produto)
+//        } else {
+//            finish()
+//        }
     }
 
     fun conversorDeMoeda(valor: BigDecimal) : String  {
@@ -85,7 +85,7 @@ class DetalhesProduto : AppCompatActivity() {
             when(item.itemId){
                 R.id.menu_detalhes_edicao -> {
                     Intent(this, FormularioCadastro::class.java).apply {
-                        putExtra("produto", produtoCarregado)
+                        putExtra("produtoID", produtoId)
                         startActivity(this)
                     }
                 }
@@ -96,10 +96,6 @@ class DetalhesProduto : AppCompatActivity() {
                     }
                 }
             }
-
         return super.onOptionsItemSelected(item)
     }
-
-
-
 }

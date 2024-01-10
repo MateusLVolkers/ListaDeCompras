@@ -1,9 +1,7 @@
 package com.mateuslvolkers.listadecompras.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.room.Room
 import com.mateuslvolkers.listadecompras.database.AppDatabase
 import com.mateuslvolkers.listadecompras.databinding.ActivityFormularioCadastroBinding
 import com.mateuslvolkers.listadecompras.extensions.carregarImagem
@@ -16,8 +14,11 @@ class FormularioCadastro : AppCompatActivity() {
     private val binding by lazy {
         ActivityFormularioCadastroBinding.inflate(layoutInflater)
     }
+    private val produtoDao by lazy {
+        AppDatabase.instanciaDB(this).produtoDao()
+    }
     private var url: String? = null
-    private var idProduto = 0L
+    private var produtoId = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,35 +31,41 @@ class FormularioCadastro : AppCompatActivity() {
                 binding.ivFormulario.carregarImagem(url)
             }
         }
+        recebeProduto()
+    }
 
-        intent.getParcelableExtra<Produto>("produto")?.let {produtoRecebido ->
-            title = "Alterar produto"
-//            Log.i("produtoRecebido", "$it")
-            idProduto = produtoRecebido.id
-            url = produtoRecebido.imagem
-            binding.apply {
-                ivFormulario.carregarImagem(produtoRecebido.imagem)
-                edtProduto.setText(produtoRecebido.nome)
-                edtDescricao.setText(produtoRecebido.descricao)
-                edtPreco.setText(produtoRecebido.valor.toPlainString())
-            }
+    override fun onResume() {
+        super.onResume()
+        produtoDao.buscarPorId(produtoId)?.let {
+            preencherCampos(it)
+        }
+    }
+
+    private fun recebeProduto() {
+        produtoId = intent.getLongExtra("produtoID", 0L)
+    }
+
+    private fun preencherCampos(produtoRecebido: Produto) {
+        title = "Alterar produto"
+        url = produtoRecebido.imagem
+        binding.apply {
+            ivFormulario.carregarImagem(produtoRecebido.imagem)
+            edtProduto.setText(produtoRecebido.nome)
+            edtDescricao.setText(produtoRecebido.descricao)
+            edtPreco.setText(produtoRecebido.valor.toPlainString())
         }
     }
 
     fun configuraBotaoSalvar() {
         val btnSalvar = binding.btnSalvar
-
-        // .allowMainThreadQueries() não é uma boa prática
-        val db = AppDatabase.instanciaDB(this)
-        val produtoDao = db.produtoDao()
-
         btnSalvar.setOnClickListener {
             val produtoNovo = criaProduto()
-            if (idProduto > 0) {
-                produtoDao.alterarProduto(produtoNovo)
-            } else {
-                produtoDao.salvar(produtoNovo)
-            }
+//            if (produtoId > 0) {
+//                produtoDao.alterarProduto(produtoNovo)
+//            } else {
+//                produtoDao.salvar(produtoNovo)
+//            }
+            produtoDao.salvar(produtoNovo)
             finish()
         }
     }
@@ -81,9 +88,8 @@ class FormularioCadastro : AppCompatActivity() {
 //            Log.i("formulario", "Descricao: ${descricao}")
 //            Log.i("formulario", "Preco: ${preco}")
 //            Log.i("formulario", preco.javaClass.name)
-
         return Produto(
-            id = idProduto,
+            id = produtoId,
             nome = nome,
             descricao = descricao,
             valor = preco,

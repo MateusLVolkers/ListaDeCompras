@@ -3,6 +3,7 @@ package com.mateuslvolkers.listadecompras.database
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.mateuslvolkers.listadecompras.model.Produto
@@ -13,14 +14,14 @@ interface ProdutoDao {
     @Query("SELECT * FROM Produto")
     fun buscaTodos() : List<Produto>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun salvar(vararg produto: Produto)
 
     @Delete
     fun deletarProduto(produto: Produto)
 
-    @Update
-    fun alterarProduto(produto: Produto)
+//    @Update
+//    fun alterarProduto(produto: Produto)
 
     @Query("SELECT * FROM Produto WHERE id = :id")
     fun buscarPorId(id: Long) : Produto?
