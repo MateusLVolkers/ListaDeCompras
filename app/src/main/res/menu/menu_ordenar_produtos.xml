@@ -4,28 +4,33 @@
 
     <item
         android:id="@+id/menu_main_ordenar"
-        android:title="Ordenar"
+        android:title="@string/menu_ordenar"
         android:icon="@drawable/ic_ordenar"
         app:showAsAction="ifRoom">
         <menu>
             <item
                 android:id="@+id/menu_ordenar_nome_asc"
-                android:title="Nome ▲"
+                android:title="@string/menu_nome_asc"
                 app:showAsAction="withText"
                 />
             <item
                 android:id="@+id/menu_ordenar_nome_desc"
-                android:title="Nome ▼"
+                android:title="@string/menu_nome_desc"
                 app:showAsAction="withText"
                 />
             <item
                 android:id="@+id/menu_ordenar_preco_asc"
-                android:title="Preco ▲"
+                android:title="@string/menu_preco_asc"
                 app:showAsAction="withText"
                 />
             <item
                 android:id="@+id/menu_ordenar_preco_desc"
-                android:title="Preco ▼"
+                android:title="@string/menu_preco_desc"
+                app:showAsAction="withText"
+                />
+            <item
+                android:id="@+id/menu_ordenar_padrao"
+                android:title="@string/menu_padrao"
                 app:showAsAction="withText"
                 />
         </menu>
