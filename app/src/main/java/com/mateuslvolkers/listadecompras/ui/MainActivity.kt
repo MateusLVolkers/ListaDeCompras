@@ -4,12 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.database.AppDatabase
 import com.mateuslvolkers.listadecompras.databinding.ActivityMainBinding
+import com.mateuslvolkers.listadecompras.model.Produto
 import com.mateuslvolkers.listadecompras.ui.recyclerview.adapter.ListaProdutosAdapter
 
 class MainActivity : AppCompatActivity() {
@@ -31,13 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // .allowMainThreadQueries() não é uma boa prática
         adapter.atualizar(produtoDao.buscaTodos())
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_ordenar_produtos, menu)
-        return super.onCreateOptionsMenu(menu)
     }
 
     fun configuraFab() {
@@ -51,7 +47,7 @@ class MainActivity : AppCompatActivity() {
     fun configuraRecyclerView() {
         val recyclerview = binding.recyclerview
         recyclerview.adapter = adapter
-        recyclerview.addItemDecoration(DividerItemDecoration(this, RecyclerView.VERTICAL))
+//        recyclerview.addItemDecoration(DividerItemDecoration(this, RecyclerView.VERTICAL))
         adapter.click = {
             val intent = Intent(this, DetalhesProduto::class.java)
             intent.putExtra("produtoID", it.id)
@@ -69,5 +65,36 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-}
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_ordenar_produtos, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val produtoReordenado: List<Produto>? = when(item.itemId){
+            R.id.menu_ordenar_nome_asc -> {
+                produtoDao.buscarNomeAsc()
+            }
+            R.id.menu_ordenar_nome_desc -> {
+                produtoDao.buscarNomeDesc()
+            }
+            R.id.menu_ordenar_preco_asc -> {
+                produtoDao.buscarValorAsc()
+            }
+            R.id.menu_ordenar_preco_desc -> {
+                produtoDao.buscarValorDesc()
+            }
+            R.id.menu_ordenar_padrao -> {
+                produtoDao.buscaTodos()
+            }
+            else -> null
+        }
+//        Log.i("listaOrdenadad", "$produtoReordenado")
+
+        produtoReordenado?.let{
+            adapter.atualizar(it)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+}

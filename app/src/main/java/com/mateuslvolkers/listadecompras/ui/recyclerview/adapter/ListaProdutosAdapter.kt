@@ -88,6 +88,7 @@ class ListaProdutosAdapter(
             if (produto.imagem.isNullOrBlank()) {
                 imagem.visibility = View.GONE
             } else {
+                imagem.visibility = View.VISIBLE
                 imagem.carregarImagem(produto.imagem)
             }
 //            card.setOnClickListener {

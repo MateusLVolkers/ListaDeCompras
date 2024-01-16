@@ -51,6 +51,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     implementation("io.coil-kt:coil:2.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 
     implementation("androidx.room:room-runtime:2.4.1")
     annotationProcessor("androidx.room:room-compiler:2.4.1")

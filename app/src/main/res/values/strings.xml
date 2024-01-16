@@ -8,4 +8,10 @@
     <string name="url_da_imagem">Url da imagem</string>
     <string name="editar">Editar</string>
     <string name="remover">Remover</string>
+    <string name="menu_padrao">Padrão</string>
+    <string name="menu_preco_desc">Preco ▼</string>
+    <string name="menu_preco_asc">Preco ▲</string>
+    <string name="menu_nome_desc">Nome ▼</string>
+    <string name="menu_nome_asc">Nome ▲</string>
+    <string name="menu_ordenar">Ordenar</string>
 </resources>

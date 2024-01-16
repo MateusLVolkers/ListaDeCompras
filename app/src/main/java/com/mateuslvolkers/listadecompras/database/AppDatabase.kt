@@ -13,7 +13,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun produtoDao() : ProdutoDao
 
     companion object{
-        fun instanciaDB(context: Context) : AppDatabase{
+        fun instanciaDB(context: Context) : AppDatabase {
             return Room.databaseBuilder(
                 context,
                 AppDatabase::class.java,
