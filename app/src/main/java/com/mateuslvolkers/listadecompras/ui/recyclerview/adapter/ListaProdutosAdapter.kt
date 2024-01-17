@@ -1,16 +1,13 @@
 package com.mateuslvolkers.listadecompras.ui.recyclerview.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import coil.load
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.databinding.ListaProdutosBinding
 import com.mateuslvolkers.listadecompras.extensions.carregarImagem
@@ -58,6 +55,7 @@ class ListaProdutosAdapter(
         RecyclerView.ViewHolder(binding.root), PopupMenu.OnMenuItemClickListener {
 
         private lateinit var produto: Produto
+
         init {
             itemView.setOnClickListener {
                 if (::produto.isInitialized) {
@@ -101,12 +99,14 @@ class ListaProdutosAdapter(
             val numeroFormatado: String = formatador.format(valor)
             return numeroFormatado
         }
+
         override fun onMenuItemClick(item: MenuItem?): Boolean {
             item?.let {
                 when (it.itemId) {
                     R.id.menu_detalhes_remover -> {
                         clicarEmRemover.invoke(produtos[adapterPosition])
                     }
+
                     R.id.menu_detalhes_edicao -> {
                         clicarEmEditar.invoke(produtos[adapterPosition])
                     }

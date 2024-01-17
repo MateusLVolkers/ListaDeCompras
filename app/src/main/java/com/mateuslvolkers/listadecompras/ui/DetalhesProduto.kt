@@ -1,13 +1,10 @@
 package com.mateuslvolkers.listadecompras.ui
 
 import android.content.Intent
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import coil.load
+import androidx.appcompat.app.AppCompatActivity
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.database.AppDatabase
 import com.mateuslvolkers.listadecompras.databinding.ActivityDetalhesProdutoBinding
@@ -19,12 +16,10 @@ import java.util.Locale
 
 class DetalhesProduto : AppCompatActivity() {
 
-    private val binding by lazy {ActivityDetalhesProdutoBinding.inflate(layoutInflater)}
-    private  var produtoCarregado: Produto? = null
-    private var produtoId : Long = 0L
-    val produtoDao by lazy {
-        AppDatabase.instanciaDB(this).produtoDao()
-    }
+    private val binding by lazy { ActivityDetalhesProdutoBinding.inflate(layoutInflater) }
+    private var produtoCarregado: Produto? = null
+    private var produtoId: Long = 0L
+    val produtoDao by lazy { AppDatabase.instanciaDB(this).produtoDao() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +64,7 @@ class DetalhesProduto : AppCompatActivity() {
 //        }
     }
 
-    fun conversorDeMoeda(valor: BigDecimal) : String  {
+    fun conversorDeMoeda(valor: BigDecimal): String {
         val formatador = NumberFormat.getCurrencyInstance(Locale("pt", "br"))
         val numeroFormatado: String = formatador.format(valor)
         return numeroFormatado
@@ -82,20 +77,21 @@ class DetalhesProduto : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-            when(item.itemId){
-                R.id.menu_detalhes_edicao -> {
-                    Intent(this, FormularioCadastro::class.java).apply {
-                        putExtra("produtoID", produtoId)
-                        startActivity(this)
-                    }
-                }
-                R.id.menu_detalhes_remover -> {
-                    produtoCarregado?.let {
-                        produtoDao.deletarProduto(it)
-                        finish()
-                    }
+        when (item.itemId) {
+            R.id.menu_detalhes_edicao -> {
+                Intent(this, FormularioCadastro::class.java).apply {
+                    putExtra("produtoID", produtoId)
+                    startActivity(this)
                 }
             }
+
+            R.id.menu_detalhes_remover -> {
+                produtoCarregado?.let {
+                    produtoDao.deletarProduto(it)
+                    finish()
+                }
+            }
+        }
         return super.onOptionsItemSelected(item)
     }
 }

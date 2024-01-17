@@ -7,16 +7,15 @@ import com.mateuslvolkers.listadecompras.databinding.ActivityFormularioCadastroB
 import com.mateuslvolkers.listadecompras.extensions.carregarImagem
 import com.mateuslvolkers.listadecompras.model.Produto
 import com.mateuslvolkers.listadecompras.ui.dialog.FormularioDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
 class FormularioCadastro : AppCompatActivity() {
 
-    private val binding by lazy {
-        ActivityFormularioCadastroBinding.inflate(layoutInflater)
-    }
-    private val produtoDao by lazy {
-        AppDatabase.instanciaDB(this).produtoDao()
-    }
+    private val binding by lazy { ActivityFormularioCadastroBinding.inflate(layoutInflater) }
+    private val produtoDao by lazy { AppDatabase.instanciaDB(this).produtoDao() }
     private var url: String? = null
     private var produtoId = 0L
 
@@ -36,8 +35,15 @@ class FormularioCadastro : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        produtoDao.buscarPorId(produtoId)?.let {
-            preencherCampos(it)
+        buscarProdutoBanco()
+    }
+
+    private fun buscarProdutoBanco() {
+        val scope = CoroutineScope(Dispatchers.IO)
+        scope.launch {
+            produtoDao.buscarPorId(produtoId)?.let {
+                preencherCampos(it)
+            }
         }
     }
 
