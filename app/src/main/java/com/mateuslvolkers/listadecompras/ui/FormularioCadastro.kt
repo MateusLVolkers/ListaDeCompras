@@ -9,7 +9,9 @@ import com.mateuslvolkers.listadecompras.model.Produto
 import com.mateuslvolkers.listadecompras.ui.dialog.FormularioDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 
 class FormularioCadastro : AppCompatActivity() {
@@ -18,6 +20,7 @@ class FormularioCadastro : AppCompatActivity() {
     private val produtoDao by lazy { AppDatabase.instanciaDB(this).produtoDao() }
     private var url: String? = null
     private var produtoId = 0L
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,10 +42,11 @@ class FormularioCadastro : AppCompatActivity() {
     }
 
     private fun buscarProdutoBanco() {
-        val scope = CoroutineScope(Dispatchers.IO)
         scope.launch {
             produtoDao.buscarPorId(produtoId)?.let {
-                preencherCampos(it)
+                withContext(Main) {
+                    preencherCampos(it)
+                }
             }
         }
     }
@@ -71,8 +75,10 @@ class FormularioCadastro : AppCompatActivity() {
 //            } else {
 //                produtoDao.salvar(produtoNovo)
 //            }
-            produtoDao.salvar(produtoNovo)
-            finish()
+            scope.launch {
+                produtoDao.salvar(produtoNovo)
+                finish()
+            }
         }
     }
 

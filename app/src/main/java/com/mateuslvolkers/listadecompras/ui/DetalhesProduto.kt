@@ -10,6 +10,12 @@ import com.mateuslvolkers.listadecompras.database.AppDatabase
 import com.mateuslvolkers.listadecompras.databinding.ActivityDetalhesProdutoBinding
 import com.mateuslvolkers.listadecompras.extensions.carregarImagem
 import com.mateuslvolkers.listadecompras.model.Produto
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.Locale
@@ -19,7 +25,8 @@ class DetalhesProduto : AppCompatActivity() {
     private val binding by lazy { ActivityDetalhesProdutoBinding.inflate(layoutInflater) }
     private var produtoCarregado: Produto? = null
     private var produtoId: Long = 0L
-    val produtoDao by lazy { AppDatabase.instanciaDB(this).produtoDao() }
+    private val produtoDao by lazy { AppDatabase.instanciaDB(this).produtoDao() }
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,10 +36,18 @@ class DetalhesProduto : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        produtoCarregado = produtoDao.buscarPorId(produtoId)
-        produtoCarregado?.let {
-            configuraView(it)
-        } ?: finish()
+        carregarProdutoBanco()
+    }
+
+    private fun carregarProdutoBanco() {
+        scope.launch {
+            produtoCarregado = produtoDao.buscarPorId(produtoId)
+            withContext(Main){
+                produtoCarregado?.let {
+                    configuraView(it)
+                } ?: finish()
+            }
+        }
     }
 
     fun configuraView(produto: Produto) {
@@ -86,9 +101,11 @@ class DetalhesProduto : AppCompatActivity() {
             }
 
             R.id.menu_detalhes_remover -> {
-                produtoCarregado?.let {
-                    produtoDao.deletarProduto(it)
-                    finish()
+                scope.launch {
+                    produtoCarregado?.let {
+                        produtoDao.deletarProduto(it)
+                        finish()
+                    }
                 }
             }
         }
