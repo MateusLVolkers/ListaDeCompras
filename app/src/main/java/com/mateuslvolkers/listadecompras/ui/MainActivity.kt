@@ -2,26 +2,23 @@ package com.mateuslvolkers.listadecompras.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.RecyclerView
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.database.AppDatabase
 import com.mateuslvolkers.listadecompras.databinding.ActivityMainBinding
 import com.mateuslvolkers.listadecompras.model.Produto
 import com.mateuslvolkers.listadecompras.ui.recyclerview.adapter.ListaProdutosAdapter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
 
-    private val binding by lazy{
-        ActivityMainBinding.inflate(layoutInflater)
-    }
-    private val produtoDao by lazy {
-        AppDatabase.instanciaDB(this).produtoDao()
-    }
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val produtoDao by lazy { AppDatabase.instanciaDB(this).produtoDao() }
     private val adapter = ListaProdutosAdapter(context = this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +30,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        adapter.atualizar(produtoDao.buscaTodos())
+        val scope = MainScope()
+
+        scope.launch {
+            val produtosDB = withContext(Dispatchers.IO) {
+                produtoDao.buscaTodos()
+            }
+            adapter.atualizar(produtosDB)
+        }
     }
 
     fun configuraFab() {
