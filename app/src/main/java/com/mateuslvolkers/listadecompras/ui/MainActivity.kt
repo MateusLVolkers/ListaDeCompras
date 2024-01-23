@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.database.AppDatabase
 import com.mateuslvolkers.listadecompras.databinding.ActivityMainBinding
 import com.mateuslvolkers.listadecompras.model.Produto
 import com.mateuslvolkers.listadecompras.ui.recyclerview.adapter.ListaProdutosAdapter
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -22,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private val produtoDao by lazy { AppDatabase.instanciaDB(this).produtoDao() }
     private val adapter = ListaProdutosAdapter(context = this)
     private val scope: CoroutineScope = MainScope()
+    private val contextoCorrotinaIO: CoroutineDispatcher = Dispatchers.IO
     private lateinit var produtoRecebido: List<Produto>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,9 +37,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         scope.launch {
-            val produtosDB = withContext(Dispatchers.IO) {
-                produtoDao.buscaTodos()
-            }
+            val produtosDB = buscarTodosProdutos()
             adapter.atualizar(produtosDB)
         }
     }
@@ -61,7 +62,7 @@ class MainActivity : AppCompatActivity() {
 
         adapter.clicarEmRemover = {produto ->
             scope.launch {
-                val produtosRecebidosDB = withContext(Dispatchers.IO) {
+                val produtosRecebidosDB = withContext(contextoCorrotinaIO) {
                     produtoDao.deletarProduto(produto)
                     produtoDao.buscaTodos()
                 }
@@ -132,31 +133,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     private suspend fun buscarProdutosNomeDesc(): List<Produto> {
-        val produtos = withContext(Dispatchers.IO) {
+        val produtos = withContext(contextoCorrotinaIO) {
             produtoDao.buscarNomeDesc()
         }
         return produtos
     }
     private suspend fun buscarProdutosNomeAsc(): List<Produto> {
-        val produtos = withContext(Dispatchers.IO) {
+        val produtos = withContext(contextoCorrotinaIO) {
             produtoDao.buscarNomeAsc()
         }
         return produtos
     }
     private suspend fun buscarProdutosValorDesc(): List<Produto> {
-        val produtos = withContext(Dispatchers.IO) {
+        val produtos = withContext(contextoCorrotinaIO) {
             produtoDao.buscarValorDesc()
         }
         return produtos
     }
     private suspend fun buscarProdutosValorAsc(): List<Produto> {
-        val produtos = withContext(Dispatchers.IO) {
+        val produtos = withContext(contextoCorrotinaIO) {
             produtoDao.buscarValorAsc()
         }
         return produtos
     }
     private suspend fun buscarTodosProdutos(): List<Produto> {
-        val produtos = withContext(Dispatchers.IO) {
+        val produtos = withContext(contextoCorrotinaIO) {
             produtoDao.buscaTodos()
         }
         return produtos
