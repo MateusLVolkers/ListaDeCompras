@@ -66,7 +66,7 @@ class FormularioCadastro : AppCompatActivity() {
         }
     }
 
-    fun configuraBotaoSalvar() {
+    private fun configuraBotaoSalvar() {
         val btnSalvar = binding.btnSalvar
         btnSalvar.setOnClickListener {
             val produtoNovo = criaProduto()
@@ -82,7 +82,7 @@ class FormularioCadastro : AppCompatActivity() {
         }
     }
 
-    fun criaProduto(): Produto {
+    private fun criaProduto(): Produto {
         val edtProduto = binding.edtProduto
         val edtDescricao = binding.edtDescricao
         val edtPreco = binding.edtPreco

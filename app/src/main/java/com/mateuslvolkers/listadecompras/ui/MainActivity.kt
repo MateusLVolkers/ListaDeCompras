@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.database.AppDatabase
 import com.mateuslvolkers.listadecompras.databinding.ActivityMainBinding
 import com.mateuslvolkers.listadecompras.model.Produto
 import com.mateuslvolkers.listadecompras.ui.recyclerview.adapter.ListaProdutosAdapter
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -20,6 +23,9 @@ class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val produtoDao by lazy { AppDatabase.instanciaDB(this).produtoDao() }
     private val adapter = ListaProdutosAdapter(context = this)
+    private val scope: CoroutineScope = MainScope()
+    private val contextoCorrotinaIO: CoroutineDispatcher = Dispatchers.IO
+    private lateinit var produtoRecebido: List<Produto>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,17 +36,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val scope = MainScope()
-
         scope.launch {
-            val produtosDB = withContext(Dispatchers.IO) {
-                produtoDao.buscaTodos()
-            }
+            val produtosDB = buscarTodosProdutos()
             adapter.atualizar(produtosDB)
         }
     }
 
-    fun configuraFab() {
+    private fun configuraFab() {
         val fab = binding.fabAdicionar
         fab.setOnClickListener {
             val intent = Intent(this, FormularioCadastro::class.java)
@@ -48,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun configuraRecyclerView() {
+    private fun configuraRecyclerView() {
         val recyclerview = binding.recyclerview
         recyclerview.adapter = adapter
 //        recyclerview.addItemDecoration(DividerItemDecoration(this, RecyclerView.VERTICAL))
@@ -59,8 +61,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         adapter.clicarEmRemover = {produto ->
-            produtoDao.deletarProduto(produto)
-            adapter.atualizar(produtoDao.buscaTodos())
+            scope.launch {
+                val produtosRecebidosDB = withContext(contextoCorrotinaIO) {
+                    produtoDao.deletarProduto(produto)
+                    produtoDao.buscaTodos()
+                }
+                adapter.atualizar(produtosRecebidosDB)
+            }
         }
         adapter.clicarEmEditar = {
             Intent(this, FormularioCadastro::class.java).apply {
@@ -76,29 +83,83 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val produtoReordenado: List<Produto>? = when(item.itemId){
+        when(item.itemId) {
             R.id.menu_ordenar_nome_asc -> {
-                produtoDao.buscarNomeAsc()
+                scope.launch {
+                    produtoRecebido = buscarProdutosNomeAsc()
+                    produtoRecebido?.let {
+                        adapter.atualizar(it)
+                    }
+                }
             }
             R.id.menu_ordenar_nome_desc -> {
-                produtoDao.buscarNomeDesc()
+                scope.launch {
+                    produtoRecebido = buscarProdutosNomeDesc()
+                    produtoRecebido?.let {
+                        adapter.atualizar(it)
+                    }
+                }
             }
             R.id.menu_ordenar_preco_asc -> {
-                produtoDao.buscarValorAsc()
+                scope.launch {
+                    produtoRecebido = buscarProdutosValorAsc()
+                    produtoRecebido?.let {
+                        adapter.atualizar(it)
+                    }
+                }
             }
             R.id.menu_ordenar_preco_desc -> {
-                produtoDao.buscarValorDesc()
+                scope.launch {
+                    produtoRecebido = buscarProdutosValorDesc()
+                    produtoRecebido?.let {
+                        adapter.atualizar(it)
+                    }
+                }
             }
             R.id.menu_ordenar_padrao -> {
-                produtoDao.buscaTodos()
+                scope.launch {
+                    produtoRecebido = buscarTodosProdutos()
+                    produtoRecebido?.let {
+                        adapter.atualizar(it)
+                    }
+                }
             }
-            else -> null
         }
 //        Log.i("listaOrdenadad", "$produtoReordenado")
-
-        produtoReordenado?.let{
-            adapter.atualizar(it)
-        }
+//        produtoReordenado?.let{
+//            adapter.atualizar(it)
+//        }
         return super.onOptionsItemSelected(item)
+    }
+
+    private suspend fun buscarProdutosNomeDesc(): List<Produto> {
+        val produtos = withContext(contextoCorrotinaIO) {
+            produtoDao.buscarNomeDesc()
+        }
+        return produtos
+    }
+    private suspend fun buscarProdutosNomeAsc(): List<Produto> {
+        val produtos = withContext(contextoCorrotinaIO) {
+            produtoDao.buscarNomeAsc()
+        }
+        return produtos
+    }
+    private suspend fun buscarProdutosValorDesc(): List<Produto> {
+        val produtos = withContext(contextoCorrotinaIO) {
+            produtoDao.buscarValorDesc()
+        }
+        return produtos
+    }
+    private suspend fun buscarProdutosValorAsc(): List<Produto> {
+        val produtos = withContext(contextoCorrotinaIO) {
+            produtoDao.buscarValorAsc()
+        }
+        return produtos
+    }
+    private suspend fun buscarTodosProdutos(): List<Produto> {
+        val produtos = withContext(contextoCorrotinaIO) {
+            produtoDao.buscaTodos()
+        }
+        return produtos
     }
 }
