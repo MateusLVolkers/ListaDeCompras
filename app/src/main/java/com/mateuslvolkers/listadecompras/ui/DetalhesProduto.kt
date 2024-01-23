@@ -13,7 +13,6 @@ import com.mateuslvolkers.listadecompras.model.Produto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
@@ -50,7 +49,7 @@ class DetalhesProduto : AppCompatActivity() {
         }
     }
 
-    fun configuraView(produto: Produto) {
+    private fun configuraView(produto: Produto) {
         binding.apply {
             titleDetalhe.text = produto.nome
             textDescricao.text = produto.descricao
@@ -59,7 +58,7 @@ class DetalhesProduto : AppCompatActivity() {
         }
     }
 
-    fun carregarProduto() {
+    private fun carregarProduto() {
         produtoId = intent.getLongExtra("produtoID", 0L)
 
 //        Implementação anterior - Refatorado
@@ -79,7 +78,7 @@ class DetalhesProduto : AppCompatActivity() {
 //        }
     }
 
-    fun conversorDeMoeda(valor: BigDecimal): String {
+    private fun conversorDeMoeda(valor: BigDecimal): String {
         val formatador = NumberFormat.getCurrencyInstance(Locale("pt", "br"))
         val numeroFormatado: String = formatador.format(valor)
         return numeroFormatado

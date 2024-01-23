@@ -2,7 +2,6 @@ package com.mateuslvolkers.listadecompras.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -42,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun configuraFab() {
+    private fun configuraFab() {
         val fab = binding.fabAdicionar
         fab.setOnClickListener {
             val intent = Intent(this, FormularioCadastro::class.java)
@@ -50,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun configuraRecyclerView() {
+    private fun configuraRecyclerView() {
         val recyclerview = binding.recyclerview
         recyclerview.adapter = adapter
 //        recyclerview.addItemDecoration(DividerItemDecoration(this, RecyclerView.VERTICAL))
@@ -86,60 +85,80 @@ class MainActivity : AppCompatActivity() {
         when(item.itemId) {
             R.id.menu_ordenar_nome_asc -> {
                 scope.launch {
-                    produtoRecebido = withContext(Dispatchers.IO) {
-                        produtoDao.buscarNomeAsc()
-                    }
-                    produtoRecebido.let {
+                    produtoRecebido = buscarProdutosNomeAsc()
+                    produtoRecebido?.let {
                         adapter.atualizar(it)
                     }
                 }
             }
             R.id.menu_ordenar_nome_desc -> {
                 scope.launch {
-                    produtoRecebido = withContext(Dispatchers.IO) {
-                        produtoDao.buscarNomeDesc()
-                    }
-                    produtoRecebido.let {
+                    produtoRecebido = buscarProdutosNomeDesc()
+                    produtoRecebido?.let {
                         adapter.atualizar(it)
                     }
                 }
             }
             R.id.menu_ordenar_preco_asc -> {
                 scope.launch {
-                    produtoRecebido = withContext(Dispatchers.IO) {
-                        produtoDao.buscarValorAsc()
-                    }
-                    produtoRecebido.let {
+                    produtoRecebido = buscarProdutosValorAsc()
+                    produtoRecebido?.let {
                         adapter.atualizar(it)
                     }
                 }
             }
             R.id.menu_ordenar_preco_desc -> {
                 scope.launch {
-                    produtoRecebido = withContext(Dispatchers.IO) {
-                        produtoDao.buscarValorDesc()
-                    }
-                    produtoRecebido.let {
+                    produtoRecebido = buscarProdutosValorDesc()
+                    produtoRecebido?.let {
                         adapter.atualizar(it)
                     }
                 }
             }
             R.id.menu_ordenar_padrao -> {
                 scope.launch {
-                    produtoRecebido = withContext(Dispatchers.IO) {
-                        produtoDao.buscaTodos()
-                    }
-                    produtoRecebido.let {
+                    produtoRecebido = buscarTodosProdutos()
+                    produtoRecebido?.let {
                         adapter.atualizar(it)
                     }
                 }
             }
-            else -> null
         }
 //        Log.i("listaOrdenadad", "$produtoReordenado")
 //        produtoReordenado?.let{
 //            adapter.atualizar(it)
 //        }
         return super.onOptionsItemSelected(item)
+    }
+
+    private suspend fun buscarProdutosNomeDesc(): List<Produto> {
+        val produtos = withContext(Dispatchers.IO) {
+            produtoDao.buscarNomeDesc()
+        }
+        return produtos
+    }
+    private suspend fun buscarProdutosNomeAsc(): List<Produto> {
+        val produtos = withContext(Dispatchers.IO) {
+            produtoDao.buscarNomeAsc()
+        }
+        return produtos
+    }
+    private suspend fun buscarProdutosValorDesc(): List<Produto> {
+        val produtos = withContext(Dispatchers.IO) {
+            produtoDao.buscarValorDesc()
+        }
+        return produtos
+    }
+    private suspend fun buscarProdutosValorAsc(): List<Produto> {
+        val produtos = withContext(Dispatchers.IO) {
+            produtoDao.buscarValorAsc()
+        }
+        return produtos
+    }
+    private suspend fun buscarTodosProdutos(): List<Produto> {
+        val produtos = withContext(Dispatchers.IO) {
+            produtoDao.buscaTodos()
+        }
+        return produtos
     }
 }
