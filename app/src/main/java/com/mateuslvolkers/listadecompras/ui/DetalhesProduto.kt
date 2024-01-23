@@ -91,7 +91,6 @@ class DetalhesProduto : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         when (item.itemId) {
             R.id.menu_detalhes_edicao -> {
                 Intent(this, FormularioCadastro::class.java).apply {

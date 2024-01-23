@@ -2,6 +2,7 @@ package com.mateuslvolkers.listadecompras.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import com.mateuslvolkers.listadecompras.database.AppDatabase
 import com.mateuslvolkers.listadecompras.databinding.ActivityMainBinding
 import com.mateuslvolkers.listadecompras.model.Produto
 import com.mateuslvolkers.listadecompras.ui.recyclerview.adapter.ListaProdutosAdapter
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -20,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val produtoDao by lazy { AppDatabase.instanciaDB(this).produtoDao() }
     private val adapter = ListaProdutosAdapter(context = this)
+    private val scope: CoroutineScope = MainScope()
+    private lateinit var produtoRecebido: List<Produto>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +34,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val scope = MainScope()
-
         scope.launch {
             val produtosDB = withContext(Dispatchers.IO) {
                 produtoDao.buscaTodos()
@@ -59,8 +61,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         adapter.clicarEmRemover = {produto ->
-            produtoDao.deletarProduto(produto)
-            adapter.atualizar(produtoDao.buscaTodos())
+            scope.launch {
+                val produtosRecebidosDB = withContext(Dispatchers.IO) {
+                    produtoDao.deletarProduto(produto)
+                    produtoDao.buscaTodos()
+                }
+                adapter.atualizar(produtosRecebidosDB)
+            }
         }
         adapter.clicarEmEditar = {
             Intent(this, FormularioCadastro::class.java).apply {
@@ -76,29 +83,63 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val produtoReordenado: List<Produto>? = when(item.itemId){
+        when(item.itemId) {
             R.id.menu_ordenar_nome_asc -> {
-                produtoDao.buscarNomeAsc()
+                scope.launch {
+                    produtoRecebido = withContext(Dispatchers.IO) {
+                        produtoDao.buscarNomeAsc()
+                    }
+                    produtoRecebido.let {
+                        adapter.atualizar(it)
+                    }
+                }
             }
             R.id.menu_ordenar_nome_desc -> {
-                produtoDao.buscarNomeDesc()
+                scope.launch {
+                    produtoRecebido = withContext(Dispatchers.IO) {
+                        produtoDao.buscarNomeDesc()
+                    }
+                    produtoRecebido.let {
+                        adapter.atualizar(it)
+                    }
+                }
             }
             R.id.menu_ordenar_preco_asc -> {
-                produtoDao.buscarValorAsc()
+                scope.launch {
+                    produtoRecebido = withContext(Dispatchers.IO) {
+                        produtoDao.buscarValorAsc()
+                    }
+                    produtoRecebido.let {
+                        adapter.atualizar(it)
+                    }
+                }
             }
             R.id.menu_ordenar_preco_desc -> {
-                produtoDao.buscarValorDesc()
+                scope.launch {
+                    produtoRecebido = withContext(Dispatchers.IO) {
+                        produtoDao.buscarValorDesc()
+                    }
+                    produtoRecebido.let {
+                        adapter.atualizar(it)
+                    }
+                }
             }
             R.id.menu_ordenar_padrao -> {
-                produtoDao.buscaTodos()
+                scope.launch {
+                    produtoRecebido = withContext(Dispatchers.IO) {
+                        produtoDao.buscaTodos()
+                    }
+                    produtoRecebido.let {
+                        adapter.atualizar(it)
+                    }
+                }
             }
             else -> null
         }
 //        Log.i("listaOrdenadad", "$produtoReordenado")
-
-        produtoReordenado?.let{
-            adapter.atualizar(it)
-        }
+//        produtoReordenado?.let{
+//            adapter.atualizar(it)
+//        }
         return super.onOptionsItemSelected(item)
     }
 }
