@@ -41,6 +41,8 @@ android {
 }
 
 dependencies {
+    val room_version = "2.4.1"
+    val lifecycle_version = "2.5.0-alpha02"
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -53,8 +55,10 @@ dependencies {
     implementation("io.coil-kt:coil:2.5.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 
-    implementation("androidx.room:room-runtime:2.4.1")
-    implementation("androidx.room:room-ktx:2.4.1")
-    annotationProcessor("androidx.room:room-compiler:2.4.1")
-    kapt("androidx.room:room-compiler:2.4.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
+
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
 }
