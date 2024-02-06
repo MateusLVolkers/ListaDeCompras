@@ -36,10 +36,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        scope.launch {
+        lifecycleScope.launch {
             val produtosDB = buscarTodosProdutos()
             adapter.atualizar(produtosDB)
         }
+//        scope.launch {
+//            val produtosDB = buscarTodosProdutos()
+//            adapter.atualizar(produtosDB)
+//        }
     }
 
     private fun configuraFab() {
