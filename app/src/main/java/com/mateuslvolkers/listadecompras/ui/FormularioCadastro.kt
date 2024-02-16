@@ -17,7 +17,10 @@ import java.math.BigDecimal
 class FormularioCadastro : AppCompatActivity() {
 
     private val binding by lazy { ActivityFormularioCadastroBinding.inflate(layoutInflater) }
-    private val produtoDao by lazy { AppDatabase.instanciaDB(this).produtoDao() }
+    private val produtoDao by lazy {
+        val db = AppDatabase.instanciaDB(this)
+        db.produtoDao()
+    }
     private var url: String? = null
     private var produtoId = 0L
     private val scope = CoroutineScope(Dispatchers.IO)

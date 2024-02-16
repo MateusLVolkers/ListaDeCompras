@@ -24,7 +24,10 @@ class DetalhesProduto : AppCompatActivity() {
     private val binding by lazy { ActivityDetalhesProdutoBinding.inflate(layoutInflater) }
     private var produtoCarregado: Produto? = null
     private var produtoId: Long = 0L
-    private val produtoDao by lazy { AppDatabase.instanciaDB(this).produtoDao() }
+    private val produtoDao by lazy {
+        val db = AppDatabase.instanciaDB(this)
+        db.produtoDao()
+    }
     private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {

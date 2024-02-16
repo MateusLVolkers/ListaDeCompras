@@ -21,7 +21,10 @@ import kotlinx.coroutines.withContext
 class MainActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val produtoDao by lazy { AppDatabase.instanciaDB(this).produtoDao() }
+    private val produtoDao by lazy {
+        val db = AppDatabase.instanciaDB(this)
+        db.produtoDao()
+    }
     private val adapter = ListaProdutosAdapter(context = this)
     private val scope: CoroutineScope = MainScope()
     private val contextoCorrotinaIO: CoroutineDispatcher = Dispatchers.IO
