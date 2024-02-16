@@ -6,12 +6,13 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.mateuslvolkers.listadecompras.model.Produto
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProdutoDao {
 
     @Query("SELECT * FROM Produto")
-    fun buscaTodos(): List<Produto>
+    fun buscaTodos(): Flow<List<Produto>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun salvar(vararg produto: Produto)

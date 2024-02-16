@@ -15,6 +15,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -41,7 +44,9 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         lifecycleScope.launch {
             val produtosDB = buscarTodosProdutos()
-            adapter.atualizar(produtosDB)
+            produtosDB.collect {
+                adapter.atualizar(it)
+            }
         }
 //        scope.launch {
 //            val produtosDB = buscarTodosProdutos()
@@ -67,15 +72,26 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        adapter.clicarEmRemover = {produto ->
-            scope.launch {
-                val produtosRecebidosDB = withContext(contextoCorrotinaIO) {
+        adapter.clicarEmRemover = { produto ->
+            lifecycleScope.launch {
+                withContext(contextoCorrotinaIO) {
                     produtoDao.deletarProduto(produto)
-                    produtoDao.buscaTodos()
                 }
-                adapter.atualizar(produtosRecebidosDB)
+                buscarTodosProdutos().collect {
+                    adapter.atualizar(it)
+                }
+//                val produtosDB = buscarTodosProdutos()
+//                produtosDB.collect {
+//                    adapter.atualizar(it)
             }
+
+//                val produtosRecebidosDB = withContext(contextoCorrotinaIO) {
+//                    produtoDao.deletarProduto(produto)
+//                    produtoDao.buscaTodos()
+//                }
+//                adapter.atualizar(produtosRecebidosDB)
         }
+
         adapter.clicarEmEditar = {
             Intent(this, FormularioCadastro::class.java).apply {
                 putExtra("produtoID", it.id)
@@ -90,7 +106,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.menu_ordenar_nome_asc -> {
                 scope.launch {
                     produtoRecebido = buscarProdutosNomeAsc()
@@ -99,6 +115,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+
             R.id.menu_ordenar_nome_desc -> {
                 scope.launch {
                     produtoRecebido = buscarProdutosNomeDesc()
@@ -107,6 +124,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+
             R.id.menu_ordenar_preco_asc -> {
                 scope.launch {
                     produtoRecebido = buscarProdutosValorAsc()
@@ -115,6 +133,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+
             R.id.menu_ordenar_preco_desc -> {
                 scope.launch {
                     produtoRecebido = buscarProdutosValorDesc()
@@ -123,9 +142,13 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+
             R.id.menu_ordenar_padrao -> {
-                scope.launch {
-                    produtoRecebido = buscarTodosProdutos()
+                lifecycleScope.launch {
+                    val produtosDB = buscarTodosProdutos()
+                    produtosDB.collect {
+                        produtoRecebido = it
+                    }
                     produtoRecebido?.let {
                         adapter.atualizar(it)
                     }
@@ -145,25 +168,29 @@ class MainActivity : AppCompatActivity() {
         }
         return produtos
     }
+
     private suspend fun buscarProdutosNomeAsc(): List<Produto> {
         val produtos = withContext(contextoCorrotinaIO) {
             produtoDao.buscarNomeAsc()
         }
         return produtos
     }
+
     private suspend fun buscarProdutosValorDesc(): List<Produto> {
         val produtos = withContext(contextoCorrotinaIO) {
             produtoDao.buscarValorDesc()
         }
         return produtos
     }
+
     private suspend fun buscarProdutosValorAsc(): List<Produto> {
         val produtos = withContext(contextoCorrotinaIO) {
             produtoDao.buscarValorAsc()
         }
         return produtos
     }
-    private suspend fun buscarTodosProdutos(): List<Produto> {
+
+    private suspend fun buscarTodosProdutos(): Flow<List<Produto>> {
         val produtos = withContext(contextoCorrotinaIO) {
             produtoDao.buscaTodos()
         }
