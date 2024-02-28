@@ -10,6 +10,7 @@ import com.mateuslvolkers.listadecompras.ui.dialog.FormularioDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
@@ -46,9 +47,13 @@ class FormularioCadastro : AppCompatActivity() {
 
     private fun buscarProdutoBanco() {
         scope.launch {
-            produtoDao.buscarPorId(produtoId)?.let {
-                withContext(Main) {
-                    preencherCampos(it)
+            val produtoRecebido = produtoDao.buscarPorId(produtoId)
+            produtoRecebido.collect {
+                it?.let {
+                    val produto = it
+                    withContext(Main) {
+                        preencherCampos(produto)
+                    }
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.mateuslvolkers.listadecompras.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +13,10 @@ import com.mateuslvolkers.listadecompras.databinding.ActivityDetalhesProdutoBind
 import com.mateuslvolkers.listadecompras.extensions.carregarImagem
 import com.mateuslvolkers.listadecompras.model.Produto
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
@@ -29,6 +33,7 @@ class DetalhesProduto : AppCompatActivity() {
         db.produtoDao()
     }
     private val contextIO: CoroutineDispatcher = Dispatchers.IO
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,14 +47,15 @@ class DetalhesProduto : AppCompatActivity() {
     }
 
     private fun carregarProdutoBanco() {
-        lifecycleScope.launch {
-            withContext(contextIO) {
-                produtoCarregado = produtoDao.buscarPorId(produtoId)
+        scope.launch {
+            produtoDao.buscarPorId(produtoId).collect {
+                it?.let {
+                    produtoCarregado = it
+                    withContext(Main) {
+                        configuraView(produtoCarregado!!)
+                    }
+                }
             }
-            produtoCarregado?.let {
-                configuraView(it)
-            } ?: finish()
-
         }
     }
 
