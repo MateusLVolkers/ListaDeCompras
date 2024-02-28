@@ -23,7 +23,7 @@ interface ProdutoDao {
 //    @Update
 //    fun alterarProduto(produto: Produto)
     @Query("SELECT * FROM Produto WHERE id = :id")
-    fun buscarPorId(id: Long): Produto?
+    fun buscarPorId(id: Long): Flow<Produto?>
 
     //  https://developer.android.com/codelabs/basic-android-kotlin-compose-sql?hl=pt-br#6
     @Query("SELECT * FROM Produto ORDER BY nome ASC")

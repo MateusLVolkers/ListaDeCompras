@@ -12,21 +12,21 @@ import com.mateuslvolkers.listadecompras.databinding.ActivityMainBinding
 import com.mateuslvolkers.listadecompras.model.Produto
 import com.mateuslvolkers.listadecompras.ui.recyclerview.adapter.ListaProdutosAdapter
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val produtoDao by lazy { AppDatabase.instanciaDB(this).produtoDao() }
+    private val produtoDao by lazy {
+        val db = AppDatabase.instanciaDB(this)
+        db.produtoDao()
+    }
     private val adapter = ListaProdutosAdapter(context = this)
-    private val scope: CoroutineScope = MainScope()
+
+    //    private val scope: CoroutineScope = MainScope()
     private val contextoCorrotinaIO: CoroutineDispatcher = Dispatchers.IO
     private lateinit var produtoRecebido: List<Produto>
 
@@ -105,36 +105,36 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_ordenar_nome_asc -> {
-                scope.launch {
+                lifecycleScope.launch {
                     produtoRecebido = buscarProdutosNomeAsc()
-                    produtoRecebido?.let {
+                    produtoRecebido.let {
                         adapter.atualizar(it)
                     }
                 }
             }
 
             R.id.menu_ordenar_nome_desc -> {
-                scope.launch {
+                lifecycleScope.launch {
                     produtoRecebido = buscarProdutosNomeDesc()
-                    produtoRecebido?.let {
+                    produtoRecebido.let {
                         adapter.atualizar(it)
                     }
                 }
             }
 
             R.id.menu_ordenar_preco_asc -> {
-                scope.launch {
+                lifecycleScope.launch {
                     produtoRecebido = buscarProdutosValorAsc()
-                    produtoRecebido?.let {
+                    produtoRecebido.let {
                         adapter.atualizar(it)
                     }
                 }
             }
 
             R.id.menu_ordenar_preco_desc -> {
-                scope.launch {
+                lifecycleScope.launch {
                     produtoRecebido = buscarProdutosValorDesc()
-                    produtoRecebido?.let {
+                    produtoRecebido.let {
                         adapter.atualizar(it)
                     }
                 }
@@ -146,7 +146,7 @@ class MainActivity : AppCompatActivity() {
                     produtosDB.collect {
                         produtoRecebido = it
                     }
-                    produtoRecebido?.let {
+                    produtoRecebido.let {
                         adapter.atualizar(it)
                     }
                 }

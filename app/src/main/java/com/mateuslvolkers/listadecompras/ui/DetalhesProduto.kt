@@ -2,17 +2,21 @@ package com.mateuslvolkers.listadecompras.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.database.AppDatabase
 import com.mateuslvolkers.listadecompras.databinding.ActivityDetalhesProdutoBinding
 import com.mateuslvolkers.listadecompras.extensions.carregarImagem
 import com.mateuslvolkers.listadecompras.model.Produto
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
@@ -24,7 +28,11 @@ class DetalhesProduto : AppCompatActivity() {
     private val binding by lazy { ActivityDetalhesProdutoBinding.inflate(layoutInflater) }
     private var produtoCarregado: Produto? = null
     private var produtoId: Long = 0L
-    private val produtoDao by lazy { AppDatabase.instanciaDB(this).produtoDao() }
+    private val produtoDao by lazy {
+        val db = AppDatabase.instanciaDB(this)
+        db.produtoDao()
+    }
+    private val contextIO: CoroutineDispatcher = Dispatchers.IO
     private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,11 +48,13 @@ class DetalhesProduto : AppCompatActivity() {
 
     private fun carregarProdutoBanco() {
         scope.launch {
-            produtoCarregado = produtoDao.buscarPorId(produtoId)
-            withContext(Main){
-                produtoCarregado?.let {
-                    configuraView(it)
-                } ?: finish()
+            produtoDao.buscarPorId(produtoId).collect {
+                it?.let {
+                    produtoCarregado = it
+                    withContext(Main) {
+                        configuraView(produtoCarregado!!)
+                    }
+                }
             }
         }
     }
@@ -99,10 +109,12 @@ class DetalhesProduto : AppCompatActivity() {
             }
 
             R.id.menu_detalhes_remover -> {
-                scope.launch {
-                    produtoCarregado?.let {
-                        produtoDao.deletarProduto(it)
-                        finish()
+                lifecycleScope.launch {
+                    withContext(contextIO) {
+                        produtoCarregado?.let {
+                            produtoDao.deletarProduto(it)
+                            finish()
+                        }
                     }
                 }
             }

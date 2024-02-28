@@ -13,12 +13,20 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun produtoDao(): ProdutoDao
 
     companion object {
+
+        private lateinit var db: AppDatabase
         fun instanciaDB(context: Context): AppDatabase {
-            return Room.databaseBuilder(
-                context,
-                AppDatabase::class.java,
-                "listaCompras.db"
-            ).build()
+            if (!::db.isInitialized) {
+                synchronized(AppDatabase::class) {
+                    db = Room.databaseBuilder(
+                        context,
+                        AppDatabase::class.java,
+                        "listaCompras.db"
+                    ).build()
+                }
+            }
+            return db
         }
     }
 }
+
