@@ -5,14 +5,14 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.database.AppDatabase
 import com.mateuslvolkers.listadecompras.databinding.ActivityDetalhesProdutoBinding
 import com.mateuslvolkers.listadecompras.extensions.carregarImagem
 import com.mateuslvolkers.listadecompras.model.Produto
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
@@ -28,7 +28,7 @@ class DetalhesProduto : AppCompatActivity() {
         val db = AppDatabase.instanciaDB(this)
         db.produtoDao()
     }
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val contextIO: CoroutineDispatcher = Dispatchers.IO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,13 +42,14 @@ class DetalhesProduto : AppCompatActivity() {
     }
 
     private fun carregarProdutoBanco() {
-        scope.launch {
-            produtoCarregado = produtoDao.buscarPorId(produtoId)
-            withContext(Main){
-                produtoCarregado?.let {
-                    configuraView(it)
-                } ?: finish()
+        lifecycleScope.launch {
+            withContext(contextIO) {
+                produtoCarregado = produtoDao.buscarPorId(produtoId)
             }
+            produtoCarregado?.let {
+                configuraView(it)
+            } ?: finish()
+
         }
     }
 
@@ -102,10 +103,12 @@ class DetalhesProduto : AppCompatActivity() {
             }
 
             R.id.menu_detalhes_remover -> {
-                scope.launch {
-                    produtoCarregado?.let {
-                        produtoDao.deletarProduto(it)
-                        finish()
+                lifecycleScope.launch {
+                    withContext(contextIO) {
+                        produtoCarregado?.let {
+                            produtoDao.deletarProduto(it)
+                            finish()
+                        }
                     }
                 }
             }
