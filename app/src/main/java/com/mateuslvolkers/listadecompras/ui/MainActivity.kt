@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
         db.produtoDao()
     }
     private val adapter = ListaProdutosAdapter(context = this)
-
     //    private val scope: CoroutineScope = MainScope()
     private val contextoCorrotinaIO: CoroutineDispatcher = Dispatchers.IO
     private lateinit var produtoRecebido: List<Produto>

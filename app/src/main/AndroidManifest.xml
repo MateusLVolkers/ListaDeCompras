@@ -15,10 +15,10 @@
         android:theme="@style/Theme.ListaDeCompras"
         tools:targetApi="31">
         <activity
-            android:name=".ui.DetalhesProduto"
+            android:name=".ui.CadastrarUsuario"
             android:exported="false" />
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,10 +27,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.DetalhesProduto"
+            android:exported="false" />
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="false"/>
+        <activity
             android:name=".ui.FormularioCadastro"
-            android:exported="true">
-        </activity>
-
+            android:exported="true" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
