@@ -37,7 +37,7 @@
         android:layout_marginLeft="@dimen/dimen_12dp"
         android:layout_marginTop="@dimen/dimen_16dp"
         android:layout_marginRight="@dimen/dimen_12dp"
-        android:hint="@string/usuario"
+        android:hint="@string/nome"
         android:textSize="@dimen/text_22sp"
         android:theme="@style/text_fields"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +60,7 @@
         android:layout_marginLeft="@dimen/dimen_12dp"
         android:layout_marginTop="@dimen/dimen_16dp"
         android:layout_marginRight="@dimen/dimen_12dp"
-        android:hint="@string/usuario"
+        android:hint="@string/senha"
         android:textSize="@dimen/text_22sp"
         android:theme="@style/text_fields"
         app:layout_constraintEnd_toEndOf="parent"
@@ -76,14 +76,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_login"
+        android:id="@+id/btn_cadastrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dimen_12dp"
         android:layout_marginTop="@dimen/dimen_16dp"
         android:layout_marginRight="@dimen/dimen_12dp"
         app:layout_constraintTop_toBottomOf="@id/text_input_senha"
-        android:text="@string/entrar"/>
+        android:text="@string/cadastrar_usuario"/>
 
 
 

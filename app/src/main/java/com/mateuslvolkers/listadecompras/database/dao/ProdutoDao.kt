@@ -1,4 +1,4 @@
-package com.mateuslvolkers.listadecompras.database
+package com.mateuslvolkers.listadecompras.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete

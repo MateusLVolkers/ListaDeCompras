@@ -18,4 +18,5 @@
     <string name="senha">Senha</string>
     <string name="entrar">Entrar</string>
     <string name="cadastrar_usuario">Cadastrar usuário</string>
+    <string name="nome">Nome</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.mateuslvolkers.listadecompras.database
+package com.mateuslvolkers.listadecompras.database.converters
 
 import androidx.room.TypeConverter
 import java.math.BigDecimal
