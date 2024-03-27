@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.database.AppDatabase
@@ -14,10 +13,11 @@ import com.mateuslvolkers.listadecompras.ui.recyclerview.adapter.ListaProdutosAd
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : UsuarioBaseActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val produtoDao by lazy {
@@ -25,30 +25,45 @@ class MainActivity : AppCompatActivity() {
         db.produtoDao()
     }
     private val adapter = ListaProdutosAdapter(context = this)
-    //    private val scope: CoroutineScope = MainScope()
     private val contextoCorrotinaIO: CoroutineDispatcher = Dispatchers.IO
-    private lateinit var produtoRecebido: List<Produto>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         configuraRecyclerView()
         configuraFab()
+        verificaDataStoreUsuario()
+        usuarioCarregarListaProdutos()
     }
 
     override fun onResume() {
         super.onResume()
+    }
+
+    private fun usuarioCarregarListaProdutos() {
         lifecycleScope.launch {
-            val produtosDB = buscarTodosProdutos()
-            produtosDB.collect {
-                adapter.atualizar(it)
+            usuario.filterNotNull().collect {
+                    carregarListaPadrao()
             }
         }
-//        scope.launch {
-//            val produtosDB = buscarTodosProdutos()
-//            adapter.atualizar(produtosDB)
-//        }
     }
+
+    private fun carregarListaPadrao() {
+        lifecycleScope.launch {
+            launch {
+                buscarTodosProdutos().collect {
+                    adapter.atualizar(it)
+                }
+            }
+        }
+    }
+
+    private fun verificaDataStoreUsuario() {
+        lifecycleScope.launch {
+            verificaUsuarioLogado()
+        }
+    }
+
 
     private fun configuraFab() {
         val fab = binding.fabAdicionar
@@ -103,49 +118,46 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.menu_perfil -> {
+                startActivity(Intent(this, PerfilActivity::class.java))
+            }
+            R.id.menu_logout -> {
+                lifecycleScope.launch {
+                    deslogarUsuario()
+                }
+            }
             R.id.menu_ordenar_nome_asc -> {
                 lifecycleScope.launch {
-                    produtoRecebido = buscarProdutosNomeAsc()
-                    produtoRecebido.let {
+                    buscarProdutosNomeAsc().let {
                         adapter.atualizar(it)
                     }
                 }
             }
-
             R.id.menu_ordenar_nome_desc -> {
                 lifecycleScope.launch {
-                    produtoRecebido = buscarProdutosNomeDesc()
-                    produtoRecebido.let {
+                    buscarProdutosNomeDesc().let {
                         adapter.atualizar(it)
                     }
                 }
             }
-
             R.id.menu_ordenar_preco_asc -> {
                 lifecycleScope.launch {
-                    produtoRecebido = buscarProdutosValorAsc()
-                    produtoRecebido.let {
+                    buscarProdutosValorAsc().let {
                         adapter.atualizar(it)
                     }
                 }
             }
-
             R.id.menu_ordenar_preco_desc -> {
                 lifecycleScope.launch {
-                    produtoRecebido = buscarProdutosValorDesc()
-                    produtoRecebido.let {
+                    buscarProdutosValorDesc().let {
                         adapter.atualizar(it)
                     }
                 }
             }
-
             R.id.menu_ordenar_padrao -> {
                 lifecycleScope.launch {
                     val produtosDB = buscarTodosProdutos()
                     produtosDB.collect {
-                        produtoRecebido = it
-                    }
-                    produtoRecebido.let {
                         adapter.atualizar(it)
                     }
                 }
@@ -157,6 +169,7 @@ class MainActivity : AppCompatActivity() {
 //        }
         return super.onOptionsItemSelected(item)
     }
+
 
     private suspend fun buscarProdutosNomeDesc(): List<Produto> {
         val produtos = withContext(contextoCorrotinaIO) {

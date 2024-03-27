@@ -19,4 +19,6 @@
     <string name="entrar">Entrar</string>
     <string name="cadastrar_usuario">Cadastrar usuário</string>
     <string name="nome">Nome</string>
+    <string name="sair">Sair</string>
+    <string name="perfil">Perfil</string>
 </resources>

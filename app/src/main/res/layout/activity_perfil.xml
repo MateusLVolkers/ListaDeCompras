@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.PerfilActivity">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_usuario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/dimen_80dp"
+        tools:text="Usuario"
+        android:textSize="@dimen/text_24sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_nome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_usuario"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="nome"
+        android:textSize="@dimen/text_20sp" />
+
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_nome"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:drawableLeft="@drawable/ic_exit_to_app_24"
+        android:text="@string/sair"
+        android:textColor="@color/black"
+        tools:ignore="RtlHardcoded" />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

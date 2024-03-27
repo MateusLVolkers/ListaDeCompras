@@ -3,36 +3,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_perfil"
+        android:icon="@drawable/ic_perfil_24"
+        android:title="@string/perfil"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_logout"
+        android:icon="@drawable/ic_exit_to_app_24"
+        android:title="@string/sair"
+        app:showAsAction="ifRoom" />
+
+
+    <item
         android:id="@+id/menu_main_ordenar"
-        android:title="@string/menu_ordenar"
         android:icon="@drawable/ic_ordenar"
+        android:title="@string/menu_ordenar"
         app:showAsAction="ifRoom">
         <menu>
             <item
                 android:id="@+id/menu_ordenar_nome_asc"
                 android:title="@string/menu_nome_asc"
-                app:showAsAction="withText"
-                />
+                app:showAsAction="withText" />
             <item
                 android:id="@+id/menu_ordenar_nome_desc"
                 android:title="@string/menu_nome_desc"
-                app:showAsAction="withText"
-                />
+                app:showAsAction="withText" />
             <item
                 android:id="@+id/menu_ordenar_preco_asc"
                 android:title="@string/menu_preco_asc"
-                app:showAsAction="withText"
-                />
+                app:showAsAction="withText" />
             <item
                 android:id="@+id/menu_ordenar_preco_desc"
                 android:title="@string/menu_preco_desc"
-                app:showAsAction="withText"
-                />
+                app:showAsAction="withText" />
             <item
                 android:id="@+id/menu_ordenar_padrao"
                 android:title="@string/menu_padrao"
-                app:showAsAction="withText"
-                />
+                app:showAsAction="withText" />
         </menu>
     </item>
+
 </menu>

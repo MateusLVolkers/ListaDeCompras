@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.database.AppDatabase
 import com.mateuslvolkers.listadecompras.databinding.ActivityCadastrarUsuarioBinding
+import com.mateuslvolkers.listadecompras.extensions.toast
 import com.mateuslvolkers.listadecompras.model.Usuario
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,8 +35,12 @@ class CadastrarUsuario : AppCompatActivity() {
     }
 
     fun cadastrarUsuario() {
+        val novoUsuario = criaUsuario()
+        cadastrarNovoUsuario(novoUsuario)
+    }
+
+    private fun cadastrarNovoUsuario(novoUsuario: Usuario) {
         lifecycleScope.launch {
-            val novoUsuario = criaUsuario()
             try {
                 withContext(Dispatchers.IO) {
                     usuarioDao.salvar(novoUsuario)
@@ -43,11 +48,7 @@ class CadastrarUsuario : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 Log.i("CadastrarUsuario", "Erro:", e)
-                Toast.makeText(
-                    this@CadastrarUsuario,
-                    "Erro ao cadastar",
-                    Toast.LENGTH_SHORT
-                ).show()
+                toast("Erro ao cadastar")
             }
         }
     }
