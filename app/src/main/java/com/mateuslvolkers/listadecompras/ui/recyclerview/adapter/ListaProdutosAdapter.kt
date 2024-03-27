@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.databinding.ListaProdutosBinding
 import com.mateuslvolkers.listadecompras.extensions.carregarImagem
@@ -18,14 +17,12 @@ import java.util.Locale
 
 
 class ListaProdutosAdapter(
-    private val context: Context,
-    produtos: List<Produto> = emptyList()
+    private val context: Context, produtos: List<Produto> = emptyList()
 ) : RecyclerView.Adapter<ListaProdutosAdapter.ViewHolder>() {
 
     var clicarEmEditar: (produto: Produto) -> Unit = {}
     var clicarEmRemover: (produto: Produto) -> Unit = {}
     var click: (produto: Produto) -> Unit = {}
-
     private val produtos = produtos.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -42,7 +39,6 @@ class ListaProdutosAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val produto = produtos[position]
         holder.vincularProduto(produto)
-
     }
 
     fun atualizar(produtos: List<Produto>) {
@@ -114,7 +110,5 @@ class ListaProdutosAdapter(
             }
             return true
         }
-
     }
-
 }

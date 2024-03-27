@@ -23,7 +23,7 @@ import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.Locale
 
-class DetalhesProduto : AppCompatActivity() {
+class DetalhesProduto : UsuarioBaseActivity() {
 
     private val binding by lazy { ActivityDetalhesProdutoBinding.inflate(layoutInflater) }
     private var produtoCarregado: Produto? = null
@@ -101,13 +101,17 @@ class DetalhesProduto : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.menu_logout -> {
+                lifecycleScope.launch {
+                    deslogarUsuario()
+                }
+            }
             R.id.menu_detalhes_edicao -> {
                 Intent(this, FormularioCadastro::class.java).apply {
                     putExtra("produtoID", produtoId)
                     startActivity(this)
                 }
             }
-
             R.id.menu_detalhes_remover -> {
                 lifecycleScope.launch {
                     withContext(contextIO) {

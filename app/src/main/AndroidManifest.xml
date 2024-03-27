@@ -15,6 +15,15 @@
         android:theme="@style/Theme.ListaDeCompras"
         tools:targetApi="31">
         <activity
+            android:name=".ui.PerfilActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.CadastrarUsuario"
+            android:exported="false" />
+        <activity
+            android:name=".ui.LoginActivity"
+            android:exported="false"></activity>
+        <activity
             android:name=".ui.DetalhesProduto"
             android:exported="false" />
         <activity
@@ -28,8 +37,7 @@
         </activity>
         <activity
             android:name=".ui.FormularioCadastro"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
 
         <meta-data
             android:name="preloaded_fonts"

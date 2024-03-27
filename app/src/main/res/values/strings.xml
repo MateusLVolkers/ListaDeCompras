@@ -14,4 +14,11 @@
     <string name="menu_nome_desc">Nome ▼</string>
     <string name="menu_nome_asc">Nome ▲</string>
     <string name="menu_ordenar">Ordenar</string>
+    <string name="usuario">Usuário</string>
+    <string name="senha">Senha</string>
+    <string name="entrar">Entrar</string>
+    <string name="cadastrar_usuario">Cadastrar usuário</string>
+    <string name="nome">Nome</string>
+    <string name="sair">Sair</string>
+    <string name="perfil">Perfil</string>
 </resources>

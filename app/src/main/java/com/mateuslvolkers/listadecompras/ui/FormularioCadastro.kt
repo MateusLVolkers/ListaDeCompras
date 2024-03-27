@@ -1,7 +1,11 @@
 package com.mateuslvolkers.listadecompras.ui
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.mateuslvolkers.listadecompras.R
 import com.mateuslvolkers.listadecompras.database.AppDatabase
 import com.mateuslvolkers.listadecompras.databinding.ActivityFormularioCadastroBinding
 import com.mateuslvolkers.listadecompras.extensions.carregarImagem
@@ -10,17 +14,20 @@ import com.mateuslvolkers.listadecompras.ui.dialog.FormularioDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 
-class FormularioCadastro : AppCompatActivity() {
+class FormularioCadastro : UsuarioBaseActivity() {
 
     private val binding by lazy { ActivityFormularioCadastroBinding.inflate(layoutInflater) }
     private val produtoDao by lazy {
         val db = AppDatabase.instanciaDB(this)
         db.produtoDao()
+    }
+    private val usuarioDao by lazy {
+        val db = AppDatabase.instanciaDB(this)
+        db.usuarioDao()
     }
     private var url: String? = null
     private var produtoId = 0L
@@ -117,5 +124,21 @@ class FormularioCadastro : AppCompatActivity() {
         )
 //            Log.i("formulario", "Produto criado: ${produtoCriado}")
 //            Log.i("formulario", "Busca no dao: ${dao.buscarTodos()}")
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_logout, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.menu_logout -> {
+                lifecycleScope.launch {
+                    deslogarUsuario()
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

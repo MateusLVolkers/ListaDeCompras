@@ -53,7 +53,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     implementation("io.coil-kt:coil:2.5.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
 
@@ -61,4 +61,6 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
+
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 }
