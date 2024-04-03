@@ -101,11 +101,6 @@ class DetalhesProduto : UsuarioBaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_logout -> {
-                lifecycleScope.launch {
-                    deslogarUsuario()
-                }
-            }
             R.id.menu_detalhes_edicao -> {
                 Intent(this, FormularioCadastro::class.java).apply {
                     putExtra("produtoID", produtoId)
