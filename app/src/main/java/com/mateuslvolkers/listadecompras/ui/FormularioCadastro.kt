@@ -14,6 +14,9 @@ import com.mateuslvolkers.listadecompras.ui.dialog.FormularioDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
@@ -84,20 +87,20 @@ class FormularioCadastro : UsuarioBaseActivity() {
     private fun configuraBotaoSalvar() {
         val btnSalvar = binding.btnSalvar
         btnSalvar.setOnClickListener {
-            val produtoNovo = criaProduto()
-//            if (produtoId > 0) {
-//                produtoDao.alterarProduto(produtoNovo)
-//            } else {
-//                produtoDao.salvar(produtoNovo)
-//            }
-            scope.launch {
-                produtoDao.salvar(produtoNovo)
-                finish()
+            lifecycleScope.launch {
+                usuario.value?.let { usuario ->
+                    val produtoNovo = criaProduto(usuario.id)
+                    scope.launch {
+                        produtoDao.salvar(produtoNovo)
+                        finish()
+                }
+            }
+
             }
         }
     }
 
-    private fun criaProduto(): Produto {
+    private fun criaProduto(usuarioId: String): Produto {
         val edtProduto = binding.edtProduto
         val edtDescricao = binding.edtDescricao
         val edtPreco = binding.edtPreco
@@ -121,6 +124,7 @@ class FormularioCadastro : UsuarioBaseActivity() {
             descricao = descricao,
             valor = preco,
             imagem = url,
+            usuarioId = usuarioId,
         )
 //            Log.i("formulario", "Produto criado: ${produtoCriado}")
 //            Log.i("formulario", "Busca no dao: ${dao.buscarTodos()}")

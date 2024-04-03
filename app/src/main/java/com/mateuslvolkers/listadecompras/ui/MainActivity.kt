@@ -42,16 +42,16 @@ class MainActivity : UsuarioBaseActivity() {
 
     private fun usuarioCarregarListaProdutos() {
         lifecycleScope.launch {
-            usuario.filterNotNull().collect {
-                    carregarListaPadrao()
+            usuario.filterNotNull().collect {usuario ->
+                    carregarListaPadrao(usuario.id)
             }
         }
     }
 
-    private fun carregarListaPadrao() {
+    private fun carregarListaPadrao(usuarioId: String) {
         lifecycleScope.launch {
             launch {
-                buscarTodosProdutos().collect {
+                buscarTodosProdutos(usuarioId).collect {
                     adapter.atualizar(it)
                 }
             }
@@ -88,9 +88,9 @@ class MainActivity : UsuarioBaseActivity() {
                 withContext(contextoCorrotinaIO) {
                     produtoDao.deletarProduto(produto)
                 }
-                buscarTodosProdutos().collect {
-                    adapter.atualizar(it)
-                }
+
+                usuarioCarregarListaProdutos()
+
 //                val produtosDB = buscarTodosProdutos()
 //                produtosDB.collect {
 //                    adapter.atualizar(it)
@@ -156,10 +156,7 @@ class MainActivity : UsuarioBaseActivity() {
             }
             R.id.menu_ordenar_padrao -> {
                 lifecycleScope.launch {
-                    val produtosDB = buscarTodosProdutos()
-                    produtosDB.collect {
-                        adapter.atualizar(it)
-                    }
+                    usuarioCarregarListaProdutos()
                 }
             }
         }
@@ -199,9 +196,9 @@ class MainActivity : UsuarioBaseActivity() {
         return produtos
     }
 
-    private suspend fun buscarTodosProdutos(): Flow<List<Produto>> {
+    private suspend fun buscarTodosProdutos(usuarioId: String): Flow<List<Produto>> {
         val produtos = withContext(contextoCorrotinaIO) {
-            produtoDao.buscaTodos()
+            produtoDao.buscaTodosProdutosUsuario(usuarioId)
         }
         return produtos
     }

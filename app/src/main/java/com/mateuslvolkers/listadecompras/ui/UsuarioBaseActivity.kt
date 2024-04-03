@@ -24,8 +24,9 @@ abstract class UsuarioBaseActivity : AppCompatActivity() {
         db.usuarioDao()
     }
     private val contextoCorrotinaIO: CoroutineDispatcher = Dispatchers.IO
-    private var _usuario: MutableStateFlow<Usuario?> = MutableStateFlow(null)
-    protected var usuario: StateFlow<Usuario?> = _usuario
+    private val _usuario: MutableStateFlow<Usuario?> = MutableStateFlow(null)
+    protected val usuario: StateFlow<Usuario?> = _usuario
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
